@@ -1,0 +1,22 @@
+# Cartelle di build e file generati
+build/
+.gradle/
+/captures
+*.apk
+*.output.json
+
+# Configurazione locale (percorsi SDK, etc)
+local.properties
+
+# File dell'IDE (Android Studio / IntelliJ)
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+*.iml
+
+# Log e file temporanei
+*.log
+.DS_Store (per Mac)
