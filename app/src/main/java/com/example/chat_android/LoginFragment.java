@@ -2,9 +2,7 @@ package com.example.chat_android;
 
 import android.content.Intent;
 import android.text.Html;
-import android.view.View;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
@@ -48,7 +46,9 @@ public class LoginFragment extends AuthFragment
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful())
                 {
-                    Toast.makeText(getContext(), getString(R.string.success_login), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
                 else
                 {

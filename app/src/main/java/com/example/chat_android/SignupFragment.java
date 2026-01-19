@@ -2,12 +2,9 @@ package com.example.chat_android;
 
 import android.content.Intent;
 import android.text.Html;
-import android.view.View;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class SignupFragment extends AuthFragment
 {
@@ -56,7 +53,9 @@ public class SignupFragment extends AuthFragment
             {
                 if (task.isSuccessful())
                 {
-                    Toast.makeText(getContext(), getString(R.string.success_signup), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
                 else
                 {
