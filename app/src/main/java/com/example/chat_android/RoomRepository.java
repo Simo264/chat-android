@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class RoomRepository
 {
-    private static final String TAG = "FIRESTORE_DEBUG";
+    public static final String FIRESTORE_TAG = "FIRESTORE_DEBUG";
     private static final String COLLECTION_NAME = "rooms";
     private FirebaseFirestore m_firestore_db;
 
@@ -16,6 +16,20 @@ public class RoomRepository
         m_firestore_db = FirebaseFirestore.getInstance();
     }
 
+
+    /**
+     * Crea una nuova stanza in Firestore utilizzando il nome come ID documento.
+     * L'operazione è ATOMICA: se la stanza esiste già, il Future fallisce.
+     *
+     * ESEMPIO DI UTILIZZO:
+     * repository.createRoomAsync("NomeStanza", uid)
+     *      .thenAccept(room -> { ... })
+     *      .exceptionally(ex -> { Log.e(TAG, "Errore: " + ex.getMessage()); return null; });
+     *
+     * @param room_name Il nome univoco della stanza (diventa l'ID del documento).
+     * @param creator_uid L'UID dell'utente che crea la stanza.
+     * @return Un CompletableFuture che contiene l'oggetto Room creato.
+     */
     public CompletableFuture<Room> createRoomAsync(String room_name, String creator_uid)
     {
         var future = new CompletableFuture<Room>();
@@ -36,6 +50,22 @@ public class RoomRepository
         return future;
     }
 
+    /**
+     * Elimina una stanza esistente dopo aver verificato i permessi e lo stato.
+     * L'operazione è ATOMICA e fallisce se:
+     * - la stanza non esiste
+     * - l'utente (uid) non è il creatore originale
+     * - la stanza contiene ancora altri utenti
+     *
+     * ESEMPIO:
+     * repository.deleteRoomAsync("NomeStanza", currentUid)
+     *      .thenRun(() -> { ... })
+     *      .exceptionally(ex -> { Log.e(TAG, "Errore: " + ex.getMessage()); return null; });
+     *
+     * @param room_name ID della stanza da eliminare.
+     * @param uid UID dell'utente che richiede l'eliminazione.
+     * @return Un CompletableFuture<Void> che si completa in caso di successo.
+     */
     public CompletableFuture<Void> deleteRoomAsync(String room_name, String uid)
     {
         var future = new CompletableFuture<Void>();
@@ -65,6 +95,17 @@ public class RoomRepository
         return future;
     }
 
+    /**
+     * Recupera l'elenco completo di tutte le stanze presenti nella collezione.
+     * Converte i documenti Firestore in una lista di oggetti Room modificabile.
+     *
+     * ESEMPIO:
+     * repository.getAllRoomsAsync()
+     *      .thenAccept(rooms -> { ... });
+     *
+     * @return Un CompletableFuture contenente un ArrayList<Room>.
+     * Ritorna una lista vuota se non ci sono stanze.
+     */
     public CompletableFuture<ArrayList<Room>> getAllRoomsAsync()
     {
         var future = new CompletableFuture<ArrayList<Room>>();
@@ -81,6 +122,18 @@ public class RoomRepository
         return future;
     }
 
+    /**
+     * Recupera i dati dettagliati di una singola stanza tramite il suo nome (ID).
+     *
+     * ESEMPIO:
+     * repository.getRoomInfoAsync("Sala_01")
+     *      .thenAccept(room -> { ... })
+     *      .exceptionally(ex -> { Log.e(TAG, "Errore: " + ex.getMessage()); return null; });
+     *
+     * @param roomName Il nome univoco della stanza da cercare.
+     * @return Un CompletableFuture con l'oggetto Room richiesto.
+     * Fallisce se la stanza non esiste.
+     */
     public CompletableFuture<Room> getRoomInfoAsync(String roomName)
     {
         var future = new CompletableFuture<Room>();
@@ -101,7 +154,6 @@ public class RoomRepository
             .addOnFailureListener(e -> {
                 future.completeExceptionally(e);
             });
-
         return future;
     }
 

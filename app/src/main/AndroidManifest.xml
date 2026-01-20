@@ -22,5 +22,9 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".UserInfoActivity"
+            android:exported="false" />
+
     </application>
 </manifest>

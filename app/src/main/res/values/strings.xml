@@ -16,6 +16,16 @@
     <string name="error_weak_password">La password è troppo semplice</string>
     <string name="success_login">Login effettuato!</string>
     <string name="success_signup">Registrazione completata!</string>
+
+    <string name="signout">Esci</string>
+    <string name="search">Cerca</string>
+    <string name="settings">Impostazioni</string>
+
+    <string name="general_info">Informazioni generali</string>
+    <string name="access">Accesso</string>
+    <string name="security">Sicurezza</string>
+    <string name="delete_account">Elimina profilo</string>
+    <string name="user_profile">Profilo utente</string>
 </resources>
 
 
