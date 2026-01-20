@@ -35,12 +35,15 @@ public class RoomRepository
         var future = new CompletableFuture<Room>();
         var roomRef = m_firestore_db.collection(COLLECTION_NAME).document(room_name);
         m_firestore_db.runTransaction(transaction -> {
-            if (transaction.get(roomRef).exists())
+            var snapshot = transaction.get(roomRef);
+            if (snapshot.exists())
                 throw new RuntimeException("La stanza '" + room_name + "' esiste già!");
 
-            var room = new Room(room_name, creator_uid, 1);
-            transaction.set(roomRef, room);
-            return room;
+            var new_room = new Room(room_name, creator_uid, new ArrayList<String>());
+            new_room.user_uids.add(creator_uid);
+
+            transaction.set(roomRef, new_room);
+            return new_room;
         }).addOnSuccessListener(result -> {
             future.complete(result);
         }).addOnFailureListener(e -> {
@@ -72,19 +75,21 @@ public class RoomRepository
         var roomRef = m_firestore_db.collection(COLLECTION_NAME).document(room_name);
         m_firestore_db.runTransaction(transaction -> {
             var snapshot = transaction.get(roomRef);
-
             if (!snapshot.exists())
                 throw new RuntimeException("Impossibile eliminare: la stanza '" + room_name + "' non esiste.");
 
             var room = snapshot.toObject(Room.class);
+            if(room == null)
+                throw new RuntimeException("La stanza non è valida.");
+
             // Solo il creatore può eliminare la stanza
-            if (room != null && !room.creator_uid.equals(uid))
+            if (!room.creator_uid.equals(uid))
                 throw new RuntimeException("Non hai il permesso di eliminare la stanza.");
 
-            if (room != null && room.user_count >= 1)
+            if (room.getUserCount() >= 1)
                 throw new RuntimeException("Impossibile eliminare: ci sono ancora utenti all'interno.");
 
-            transaction.delete(roomRef);
+            transaction.update(roomRef, "is_delete", true);
             return null;
         }).addOnSuccessListener(result -> {
             future.complete(null);
@@ -110,6 +115,7 @@ public class RoomRepository
     {
         var future = new CompletableFuture<ArrayList<Room>>();
         m_firestore_db.collection(COLLECTION_NAME)
+            .whereEqualTo("is_delete", false)
             .get()
             .addOnSuccessListener(queryDocumentSnapshots -> {
                 var rooms = new ArrayList<Room>(queryDocumentSnapshots.toObjects(Room.class));
@@ -141,14 +147,16 @@ public class RoomRepository
             .document(roomName)
             .get()
             .addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists())
+                Room room = documentSnapshot.toObject(Room.class);
+
+                if (documentSnapshot.exists() && room != null && !room.is_delete)
                 {
-                    var room = documentSnapshot.toObject(Room.class);
                     future.complete(room);
                 }
                 else
                 {
-                    future.completeExceptionally(new RuntimeException("Stanza '" + roomName + "' non trovata."));
+                    // Se è cancellato logicamente, lo trattiamo come se non esistesse
+                    future.completeExceptionally(new RuntimeException("Stanza '" + roomName + "' non disponibile."));
                 }
             })
             .addOnFailureListener(e -> {
@@ -156,5 +164,4 @@ public class RoomRepository
             });
         return future;
     }
-
 }

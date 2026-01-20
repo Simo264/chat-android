@@ -11,7 +11,7 @@ public class SignupFragment extends AuthFragment
     @Override
     protected void initFragment() {
         m_text_title.setText(getString(R.string.title_signup));
-        m_button_submit.setText(getString(R.string.button_submit));
+        m_button_submit.setText(getString(R.string.submit));
         m_button_submit.setOnClickListener(v -> {
            authentication();
         });

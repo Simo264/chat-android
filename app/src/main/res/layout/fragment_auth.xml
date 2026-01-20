@@ -48,7 +48,7 @@
         android:id="@+id/buttonSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_submit"
+        android:text="@string/submit"
         android:layout_marginTop="24dp"
         />
 

@@ -21,7 +21,7 @@ public class UserInfoActivity extends AppCompatActivity
         var auth_repo = new AuthRepository();
         var current_user = auth_repo.getCurrentUser();
         if (current_user == null)
-            throw new RuntimeException("L'utente deve essere autenticato!");
+            throw new RuntimeException(getString(R.string.error_user_not_authenticated));
 
         MaterialToolbar toolbar = findViewById(R.id.topAppBarUserInfo);
         toolbar.setNavigationOnClickListener(v -> {
@@ -40,10 +40,10 @@ public class UserInfoActivity extends AppCompatActivity
         TextView tv_uid = findViewById(R.id.info_uid);
         TextView tv_timestamp = findViewById(R.id.info_timestamp);
 
-        tv_username.setText("Username: " + username);
-        tv_email.setText("Email: " + email);
-        tv_uid.setText("UID: " + uid);
-        tv_timestamp.setText("Account creato il: " + date_string);
+        tv_username.setText(getString(R.string.info_username_format, username));
+        tv_email.setText(getString(R.string.info_email_format, email));
+        tv_uid.setText(getString(R.string.info_uid_format, uid));
+        tv_timestamp.setText(getString(R.string.info_timestamp_format, date_string));
 
         Button btn_logout = findViewById(R.id.btn_signout);
         btn_logout.setOnClickListener(v -> {
@@ -62,12 +62,12 @@ public class UserInfoActivity extends AppCompatActivity
 
     private void showDeleteConfirmation() {
         new MaterialAlertDialogBuilder(this)
-            .setTitle("Elimina Account")
-            .setMessage("Sei sicuro? Questa azione è irreversibile e cancellerà tutti i tuoi dati.")
-            .setPositiveButton("Elimina", (d, w) -> {
+            .setTitle(getString(R.string.delete_account))
+            .setMessage(getString(R.string.confirm_delete_account))
+            .setPositiveButton(getString(R.string.delete), (d, w) -> {
                 // todo
             })
-            .setNegativeButton("Annulla", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show();
     }
 }
