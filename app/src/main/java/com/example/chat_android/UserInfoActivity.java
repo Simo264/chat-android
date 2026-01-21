@@ -60,7 +60,8 @@ public class UserInfoActivity extends AppCompatActivity
         });
     }
 
-    private void showDeleteConfirmation() {
+    private void showDeleteConfirmation()
+    {
         new MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.delete_account))
             .setMessage(getString(R.string.confirm_delete_account))

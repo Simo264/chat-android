@@ -16,7 +16,7 @@ public class AuthActivity extends AppCompatActivity
         var auth_repo = new AuthRepository();
         if (auth_repo.isUserLoggedIn())
         {
-            Intent intent = new Intent(this, MainActivity.class);
+            var intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
             return;

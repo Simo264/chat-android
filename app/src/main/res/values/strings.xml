@@ -36,8 +36,10 @@
 
     <string name="confirm_delete_account">Sei sicuro? Questa azione è irreversibile e cancellerà tutti i tuoi dati.</string>
 
-    <string name="all_rooms_format">Tutte le stanze (%1$d)</string>
+    <string name="rooms">Stanze</string>
+    <string name="avail_rooms">Stanze disponibili (%1$d)</string>
     <string name="user_count">Partecipanti: %1$d</string>
+    <string name="owner">Proprietario</string>
 </resources>
 
 

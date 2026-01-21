@@ -1,6 +1,7 @@
 package com.example.chat_android;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -9,7 +10,9 @@ public class RoomRepository
 {
     public static final String FIRESTORE_TAG = "FIRESTORE_DEBUG";
     private static final String COLLECTION_NAME = "rooms";
-    private FirebaseFirestore m_firestore_db;
+    private final FirebaseFirestore m_firestore_db;
+    private ListenerRegistration m_rooms_listener = null;
+
 
     public RoomRepository()
     {
@@ -40,7 +43,7 @@ public class RoomRepository
                 throw new RuntimeException("La stanza '" + room_name + "' esiste già!");
 
             var new_room = new Room(room_name, creator_uid, new ArrayList<String>());
-            new_room.user_uids.add(creator_uid);
+            new_room.users.add(creator_uid);
 
             transaction.set(roomRef, new_room);
             return new_room;
@@ -163,5 +166,38 @@ public class RoomRepository
                 future.completeExceptionally(e);
             });
         return future;
+    }
+
+
+    public void observeAllRooms(RoomsListener listener)
+    {
+        // chiudi un eventuale listener esistente prima di inizializzarne uno nuovo
+        removeListener();
+
+        m_rooms_listener = m_firestore_db
+            .collection(COLLECTION_NAME)
+            .whereEqualTo("is_delete", false)
+            .addSnapshotListener((snapshots, error) -> {
+
+                if (error != null)
+                {
+                    listener.onError(error);
+                    return;
+                }
+                if (snapshots != null)
+                {
+                    var rooms = new ArrayList<Room>(snapshots.toObjects(Room.class));
+                    listener.onRoomsUpdated(rooms);
+                }
+            });
+    }
+
+    public void removeListener()
+    {
+        if (m_rooms_listener == null)
+            return;
+
+        m_rooms_listener.remove();
+        m_rooms_listener = null;
     }
 }

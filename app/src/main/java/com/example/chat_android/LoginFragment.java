@@ -46,7 +46,7 @@ public class LoginFragment extends AuthFragment
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful())
                 {
-                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    var intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
                 }

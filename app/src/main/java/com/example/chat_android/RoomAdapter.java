@@ -12,10 +12,10 @@ import java.util.ArrayList;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder>
 {
-    private ArrayList<Room> m_room_list;
-    private String m_current_user_uid;
+    private final ArrayList<Room> m_room_list;
+    private final String m_current_user_uid;
 
-    public RoomAdapter(ArrayList<Room> room_list, String user_uid)
+    public RoomAdapter(@NonNull ArrayList<Room> room_list, String user_uid)
     {
         m_room_list = room_list;
         m_current_user_uid = user_uid;
@@ -45,7 +45,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
         // Click sulla card
         holder.itemView.setOnClickListener(v -> {
-            // listener.onRoomClick(room);
+
         });
     }
 
@@ -53,6 +53,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public int getItemCount()
     {
         return m_room_list.size();
+    }
+
+    public void updateRooms(ArrayList<Room> newRooms)
+    {
+        m_room_list.clear();
+        m_room_list.addAll(newRooms);
+        notifyDataSetChanged();
     }
 
     static class RoomViewHolder extends RecyclerView.ViewHolder
