@@ -11,6 +11,9 @@
     <string name="settings">Impostazioni</string>
     <string name="cancel">Annulla</string>
     <string name="delete">Elimina</string>
+    <string name="error">Errore</string>
+    <string name="ok">Ok</string>
+
 
     <string name="error_empty_fields">Compila tutti i campi</string>
     <string name="error_password_too_short">La password deve avere almeno 6 caratteri</string>
@@ -40,6 +43,7 @@
     <string name="fab_create_new_room">Crea una nuova stanza</string>
 
     <string name="confirm_delete_account">Sei sicuro? Questa azione è irreversibile e cancellerà tutti i tuoi dati.</string>
+    <string name="confirm_delete_room">Sei sicuro di voler eliminare definitivamente questa stanza?</string>
 
     <string name="rooms">Stanze</string>
     <string name="avail_rooms">Stanze disponibili</string>
@@ -50,6 +54,9 @@
     <string name="room_info">Informazioni stanza</string>
     <string name="join_and_start_discussion">Entra e inizia la discussione</string>
     <string name="leave_room">Esci dalla stanza</string>
+    <string name="delete_room">Elimina la stanza</string>
+    <string name="room_deleted_success">La stanza è stata eliminata con successo!</string>
+
 
 </resources>
 

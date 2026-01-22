@@ -39,8 +39,7 @@ public class RoomRepository
     }
 
     /**
-     * Crea una nuova stanza in Firestore utilizzando il nome come ID documento.
-     * L'operazione è ATOMICA: se la stanza esiste già, il Future fallisce.
+     * Crea una nuova stanza in Firestore utilizzando il nome come ID documento.*
      *
      * ESEMPIO DI UTILIZZO:
      * repository.createRoomAsync("NomeStanza", uid)
@@ -74,12 +73,8 @@ public class RoomRepository
     }
 
     /**
-     * Elimina una stanza esistente dopo aver verificato i permessi e lo stato.
-     * L'operazione è ATOMICA e fallisce se:
-     * - la stanza non esiste
-     * - l'utente (uid) non è il creatore originale
-     * - la stanza contiene ancora altri utenti
-     *
+     * Effettua una soft delete di una stanza.
+
      * ESEMPIO:
      * repository.deleteRoomAsync("NomeStanza", currentUid)
      *      .thenRun(() -> { ... })
@@ -107,7 +102,7 @@ public class RoomRepository
             if (!room.creator_uid.equals(uid))
                 throw new RuntimeException("Non hai il permesso di eliminare la stanza.");
 
-            if (room.getUserCount() >= 1)
+            if (!room.users.isEmpty())
                 throw new RuntimeException("Impossibile eliminare: ci sono ancora utenti all'interno.");
 
             transaction.update(document, "is_delete", true);

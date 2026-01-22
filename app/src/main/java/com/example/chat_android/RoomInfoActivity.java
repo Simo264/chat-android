@@ -2,6 +2,7 @@ package com.example.chat_android;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,8 +11,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class RoomInfoActivity extends AppCompatActivity
@@ -51,6 +52,15 @@ public class RoomInfoActivity extends AppCompatActivity
         m_text_partecipants = findViewById(R.id.text_partecipants);
         m_chip_group = findViewById(R.id.chip_group_users);
         m_btn_action = findViewById(R.id.btn_action);
+
+        var current_user_uid = AuthRepository.getInstance().getUserUid();
+        if(room.creator_uid.equals(current_user_uid))
+        {
+            MaterialButton btn_delete = findViewById(R.id.btn_delete_room);
+            btn_delete.setVisibility(View.VISIBLE);
+            btn_delete.setOnClickListener(v -> showDeleteConfirmation(room.name, current_user_uid));
+        }
+
     }
 
     @Override
@@ -95,12 +105,16 @@ public class RoomInfoActivity extends AppCompatActivity
 
                         action.thenRun(() ->
                         {
-                            m_btn_action.setEnabled(true);
+                            runOnUiThread(() -> m_btn_action.setEnabled(true));
                         })
                         .exceptionally(ex ->
                         {
-                            m_btn_action.setEnabled(true);
-                            Toast.makeText(RoomInfoActivity.this, "Errore: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                            runOnUiThread(() ->
+                            {
+                                m_btn_action.setEnabled(true);
+                                var msg = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+                                Toast.makeText(RoomInfoActivity.this, "Errore: " + msg, Toast.LENGTH_SHORT).show();
+                            });
                             return null;
                         });
                     });
@@ -120,5 +134,42 @@ public class RoomInfoActivity extends AppCompatActivity
     {
         super.onStop();
         RoomRepository.getInstance().removeSingleRoomListener();
+    }
+
+
+
+    private void showDeleteConfirmation(String room_name, String user_uid)
+    {
+        new MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.delete_room))
+            .setMessage(getString(R.string.confirm_delete_room))
+            .setNegativeButton(getString(R.string.cancel), null)
+            .setPositiveButton(getString(R.string.delete), (dialog, which) ->
+            {
+                RoomRepository.getInstance().deleteRoomAsync(room_name, user_uid)
+                    .thenRun(() ->
+                    {
+                        runOnUiThread(() ->
+                        {
+                            RoomRepository.getInstance().removeSingleRoomListener();
+                            finish();
+                            Toast.makeText(this, R.string.room_deleted_success, Toast.LENGTH_SHORT).show();
+                        });
+                    })
+                    .exceptionally(ex ->
+                    {
+                        runOnUiThread(() ->
+                        {
+                            var msg = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+                            new MaterialAlertDialogBuilder(this)
+                                .setTitle(getString(R.string.error))
+                                .setMessage(msg)
+                                .setPositiveButton(getString(R.string.ok), null)
+                                .show();
+                        });
+                        return null;
+                    });
+            })
+            .show();
     }
 }

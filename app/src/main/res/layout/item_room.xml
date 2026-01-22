@@ -10,7 +10,8 @@
     app:cardElevation="0dp"
     style="?attr/materialCardViewFilledStyle">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -22,8 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/text_room_name"
@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="[Nome stanza]"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
@@ -41,8 +42,24 @@
                 android:textSize="13sp"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="2dp" />
-
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/icon_is_joined"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/bookmark_check_24"
+            android:visibility="gone"
+            app:tint="?attr/colorSecondary" />
+
+        <ImageView
+            android:id="@+id/icon_is_owner"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/supervisor_account_24"
+            android:visibility="gone"
+            app:tint="?attr/colorPrimary" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

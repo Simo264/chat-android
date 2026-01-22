@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,10 +15,17 @@ import java.util.ArrayList;
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder>
 {
     private final ArrayList<Room> m_room_list;
+    private final String m_current_uid;
+    private final String m_current_username;
+
 
     public RoomAdapter(@NonNull ArrayList<Room> room_list)
     {
         m_room_list = room_list;
+
+        var auth_repo = AuthRepository.getInstance();
+        m_current_uid = auth_repo.getUserUid();
+        m_current_username = auth_repo.getUsername();
     }
 
     @Override
@@ -31,13 +39,27 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public void onBindViewHolder(@NonNull RoomViewHolder holder, int position)
     {
         var room = m_room_list.get(position);
-        holder.text_room_name.setText(room.name);
-
         var context = holder.itemView.getContext();
+
+        // setup colonna 1
+        holder.text_room_name.setText(room.name);
         holder.text_user_count.setText(context.getString(R.string.partecipants, room.getUserCount()));
 
+        // setup colonna 2: icona Bookmark Check
+        if (room.users.contains(m_current_username))
+            holder.icon_is_joined.setVisibility(View.VISIBLE);
+        else
+            holder.icon_is_joined.setVisibility(View.GONE);
+
+        // setup colonna 3:icona Supervisor Account
+        if (room.creator_uid.equals(m_current_uid))
+            holder.icon_is_owner.setVisibility(View.VISIBLE);
+        else
+            holder.icon_is_owner.setVisibility(View.GONE);
+
         // Click sulla card
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v ->
+        {
             var intent = new Intent(context, RoomInfoActivity.class);
             intent.putExtra("ROOM_OBJECT", room);
             context.startActivity(intent);
@@ -61,11 +83,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     {
         public TextView text_room_name;
         public TextView text_user_count;
+        public ImageView icon_is_joined;
+        public ImageView icon_is_owner;
         public RoomViewHolder(@NonNull View itemView)
         {
             super(itemView);
             text_room_name = itemView.findViewById(R.id.text_room_name);
             text_user_count = itemView.findViewById(R.id.text_user_count_item);
+            icon_is_joined = itemView.findViewById(R.id.icon_is_joined);
+            icon_is_owner = itemView.findViewById(R.id.icon_is_owner);
         }
     }
 }

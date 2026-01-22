@@ -74,13 +74,29 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_action"
-        style="@style/Widget.Material3.Button.TonalButton"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_margin="16dp"
-        android:text="@string/join_and_start_discussion"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_action"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/join_and_start_discussion" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete_room"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:text="@string/delete_room"
+            android:textColor="?attr/colorError"
+            app:iconTint="?attr/colorError" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

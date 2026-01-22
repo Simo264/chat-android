@@ -43,7 +43,8 @@ public class LoginFragment extends AuthFragment
         }
 
         m_firebase_auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(task -> {
+            .addOnCompleteListener(task ->
+            {
                 if (task.isSuccessful())
                 {
                     var intent = new Intent(getContext(), MainActivity.class);

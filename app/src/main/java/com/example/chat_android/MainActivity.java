@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(view -> {
             var popup = new PopupMenu(MainActivity.this, view);
             popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
-            popup.setOnMenuItemClickListener(item -> {
+            popup.setOnMenuItemClickListener(item ->
+            {
                 return false;
             });
             popup.show();
@@ -68,7 +69,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onRoomsUpdated(ArrayList<Room> rooms)
             {
-                runOnUiThread(() -> {
+                runOnUiThread(() ->
+                {
                     if (m_room_adapter == null)
                     {
                         m_room_adapter = new RoomAdapter(rooms);
