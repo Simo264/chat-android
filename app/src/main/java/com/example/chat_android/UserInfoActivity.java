@@ -18,32 +18,23 @@ public class UserInfoActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        var auth_repo = new AuthRepository();
-        var current_user = auth_repo.getCurrentUser();
-        if (current_user == null)
+        var auth_repo = AuthRepository.getInstance();
+        if (!auth_repo.isUserLoggedIn())
             throw new RuntimeException(getString(R.string.error_user_not_authenticated));
 
-        MaterialToolbar toolbar = findViewById(R.id.topAppBarUserInfo);
-        toolbar.setNavigationOnClickListener(v -> {
-            finish();
-        });
-
-        var email = current_user.getEmail();
-        var uid = current_user.getUid();
-        var username = email.split("@")[0];
-        var creation_timestamp = current_user.getMetadata().getCreationTimestamp();
-        var data_format = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault());
-        var date_string = data_format.format(new java.util.Date(creation_timestamp));
+        MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
+        top_app_bar.setTitle(R.string.user_profile);
+        top_app_bar.setNavigationIcon(R.drawable.chevron_left_24);
+        top_app_bar.setNavigationOnClickListener(v -> finish());
 
         TextView tv_username = findViewById(R.id.info_username);
         TextView tv_email = findViewById(R.id.info_email);
         TextView tv_uid = findViewById(R.id.info_uid);
         TextView tv_timestamp = findViewById(R.id.info_timestamp);
-
-        tv_username.setText(getString(R.string.info_username_format, username));
-        tv_email.setText(getString(R.string.info_email_format, email));
-        tv_uid.setText(getString(R.string.info_uid_format, uid));
-        tv_timestamp.setText(getString(R.string.info_timestamp_format, date_string));
+        tv_username.setText(getString(R.string.info_username_format, auth_repo.getUsername()));
+        tv_email.setText(getString(R.string.info_email_format, auth_repo.getUserEmail()));
+        tv_uid.setText(getString(R.string.info_uid_format, auth_repo.getUserUid()));
+        tv_timestamp.setText(getString(R.string.info_timestamp_format, auth_repo.getUserCreationTime()));
 
         Button btn_logout = findViewById(R.id.btn_signout);
         btn_logout.setOnClickListener(v -> {
@@ -55,9 +46,7 @@ public class UserInfoActivity extends AppCompatActivity
         });
 
         Button btn_delete = findViewById(R.id.btn_delete_account);
-        btn_delete.setOnClickListener(v -> {
-            showDeleteConfirmation();
-        });
+        btn_delete.setOnClickListener(v -> { showDeleteConfirmation(); });
     }
 
     private void showDeleteConfirmation()

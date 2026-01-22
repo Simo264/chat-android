@@ -4,113 +4,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="?attr/colorSurface">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        android:fitsSystemWindows="true"
-        app:liftOnScroll="true">
+    <include
+        layout="@layout/app_bar"
+        android:id="@+id/included_app_bar" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/top_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/rooms"
-            app:titleCentered="true"
-            app:menu="@menu/main_menu" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="8dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/avail_rooms_label"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:text="@string/avail_rooms"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/avail_rooms_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tutte le stanze"
-                    android:textSize="20sp"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <TextView
-                    android:id="@+id/avail_rooms_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/avail_rooms_label"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="8dp"
-                    android:text="(0)"
-                    android:fontFamily="@font/saira_regular"
-                    android:textColor="?attr/colorPrimary" />
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_all_rooms"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginBottom="24dp"
-                android:scrollbars="vertical"
-                android:fadeScrollbars="false"
-                android:scrollbarThumbVertical="?attr/colorPrimary"
-                android:nestedScrollingEnabled="true"
-                android:overScrollMode="always"
-                android:background="?attr/colorSurfaceVariant"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/avail_rooms_counter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_toEndOf="@id/avail_rooms_label"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:text="@string/rooms_counter" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/title_joined_rooms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Le mie stanze"
-                    android:textSize="20sp"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <TextView
-                    android:id="@+id/joined_rooms_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/title_joined_rooms"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="8dp"
-                    android:text="(0)"
-                    android:fontFamily="@font/saira_regular"
-                    android:textColor="?attr/colorTertiary" />
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_joined_rooms"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginBottom="24dp"
-                android:scrollbars="vertical"
-                android:fadeScrollbars="false"
-                android:scrollbarThumbVertical="?attr/colorPrimary"
-                android:nestedScrollingEnabled="true"
-                android:overScrollMode="always"
-                android:background="?attr/colorSurfaceVariant"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_all_rooms"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="24dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarThumbVertical="?attr/colorPrimary"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_explore"
@@ -118,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="96dp"
+        android:layout_marginBottom="32dp"
         app:srcCompat="@drawable/explore_24"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
 

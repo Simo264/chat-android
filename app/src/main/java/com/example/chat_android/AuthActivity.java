@@ -13,7 +13,7 @@ public class AuthActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Se l'utente è già loggato vado direttamente alla main activity
-        var auth_repo = new AuthRepository();
+        var auth_repo = AuthRepository.getInstance();
         if (auth_repo.isUserLoggedIn())
         {
             var intent = new Intent(this, MainActivity.class);
@@ -26,8 +26,8 @@ public class AuthActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LoginFragment())
-                    .commit();
+                .replace(R.id.fragment_container, new LoginFragment())
+                .commit();
         }
     }
 }

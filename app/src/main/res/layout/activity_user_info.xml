@@ -8,18 +8,9 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBarUserInfo"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/user_profile"
-            app:navigationIcon="@drawable/chevron_left_24"
-            style="@style/Widget.Material3.Toolbar.Surface" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include
+        layout="@layout/app_bar"
+        android:id="@+id/included_app_bar" />
 
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -57,26 +48,26 @@
                     <TextView android:id="@+id/info_username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Username: --"
+                        android:text="@string/info_username_format"
                         android:layout_marginBottom="8dp"/>
 
                     <TextView android:id="@+id/info_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Email: --"
+                        android:text="@string/info_email_format"
                         android:layout_marginBottom="8dp"/>
 
                     <TextView android:id="@+id/info_uid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UID: --"
+                        android:text="@string/info_uid_format"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp"/>
 
                     <TextView android:id="@+id/info_timestamp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Creato il: --"
+                        android:text="@string/info_timestamp_format"
                         android:textSize="12sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

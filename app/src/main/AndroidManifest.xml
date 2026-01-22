@@ -26,5 +26,9 @@
             android:name=".UserInfoActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".RoomInfoActivity"
+            android:exported="false" />
+
     </application>
 </manifest>

@@ -33,13 +33,24 @@
     <string name="info_email_format">Email: %1$s</string>
     <string name="info_uid_format">UID: %1$s</string>
     <string name="info_timestamp_format">Account creato il: %1$s</string>
+    <string name="rooms_counter">(%1$d)</string>
+
+    <string name="fab_view_all_rooms">Visualizza le stanze create</string>
+    <string name="fab_view_joined_rooms">Visualizza le stanze attive</string>
+    <string name="fab_create_new_room">Crea una nuova stanza</string>
 
     <string name="confirm_delete_account">Sei sicuro? Questa azione è irreversibile e cancellerà tutti i tuoi dati.</string>
 
     <string name="rooms">Stanze</string>
-    <string name="avail_rooms">Stanze disponibili (%1$d)</string>
-    <string name="user_count">Partecipanti: %1$d</string>
+    <string name="avail_rooms">Stanze disponibili</string>
+    <string name="partecipants">Partecipanti: %1$d</string>
     <string name="owner">Proprietario</string>
+    <string name="creator_name">Nome creatore: \n%1$s</string>
+    <string name="creator_uid">UID creatore: \n%1$s</string>
+    <string name="room_info">Informazioni stanza</string>
+    <string name="join_and_start_discussion">Entra e inizia la discussione</string>
+    <string name="leave_room">Esci dalla stanza</string>
+
 </resources>
 
 

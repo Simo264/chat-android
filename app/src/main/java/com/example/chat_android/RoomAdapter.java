@@ -1,5 +1,6 @@
 package com.example.chat_android;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,10 @@ import java.util.ArrayList;
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder>
 {
     private final ArrayList<Room> m_room_list;
-    private final String m_current_user_uid;
 
-    public RoomAdapter(@NonNull ArrayList<Room> room_list, String user_uid)
+    public RoomAdapter(@NonNull ArrayList<Room> room_list)
     {
         m_room_list = room_list;
-        m_current_user_uid = user_uid;
     }
 
     @Override
@@ -32,20 +31,16 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public void onBindViewHolder(@NonNull RoomViewHolder holder, int position)
     {
         var room = m_room_list.get(position);
-        holder.text_index.setText(String.valueOf(position + 1));
         holder.text_room_name.setText(room.name);
 
         var context = holder.itemView.getContext();
-        holder.text_user_count.setText(context.getString(R.string.user_count, room.getUserCount()));
-
-        if (room.creator_uid.equals(m_current_user_uid))
-            holder.chip_owner.setVisibility(View.VISIBLE);
-        else
-            holder.chip_owner.setVisibility(View.GONE);
+        holder.text_user_count.setText(context.getString(R.string.partecipants, room.getUserCount()));
 
         // Click sulla card
         holder.itemView.setOnClickListener(v -> {
-
+            var intent = new Intent(context, RoomInfoActivity.class);
+            intent.putExtra("ROOM_OBJECT", room);
+            context.startActivity(intent);
         });
     }
 
@@ -64,18 +59,13 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
     static class RoomViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView text_index;
         public TextView text_room_name;
         public TextView text_user_count;
-        public View chip_owner;
         public RoomViewHolder(@NonNull View itemView)
         {
             super(itemView);
-
-            text_index = itemView.findViewById(R.id.text_index);
             text_room_name = itemView.findViewById(R.id.text_room_name);
             text_user_count = itemView.findViewById(R.id.text_user_count_item);
-            chip_owner = itemView.findViewById(R.id.chip_owner);
         }
     }
 }
