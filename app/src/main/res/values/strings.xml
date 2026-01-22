@@ -49,7 +49,7 @@
     <string name="avail_rooms">Stanze disponibili</string>
     <string name="partecipants">Partecipanti: %1$d</string>
     <string name="owner">Proprietario</string>
-    <string name="creator_name">Nome creatore: \n%1$s</string>
+    <string name="creator_name">Creatore: %1$s</string>
     <string name="creator_uid">UID creatore: \n%1$s</string>
     <string name="room_info">Informazioni stanza</string>
     <string name="join_and_start_discussion">Entra e inizia la discussione</string>

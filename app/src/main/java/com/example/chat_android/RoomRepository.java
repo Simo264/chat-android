@@ -42,15 +42,15 @@ public class RoomRepository
      * Crea una nuova stanza in Firestore utilizzando il nome come ID documento.*
      *
      * ESEMPIO DI UTILIZZO:
-     * repository.createRoomAsync("NomeStanza", uid)
+     * repository.createRoomAsync("NomeStanza", username)
      *      .thenAccept(room -> { ... })
      *      .exceptionally(ex -> { Log.e(TAG, "Errore: " + ex.getMessage()); return null; });
      *
      * @param room_name Il nome univoco della stanza (diventa l'ID del documento).
-     * @param creator_uid L'UID dell'utente che crea la stanza.
+     * @param creator_name Il nome dell'utente che crea la stanza.
      * @return Un CompletableFuture che contiene l'oggetto Room creato.
      */
-    public CompletableFuture<Room> createRoomAsync(String room_name, String creator_uid, String creator_name)
+    public CompletableFuture<Room> createRoomAsync(String room_name, String creator_name)
     {
         var future = new CompletableFuture<Room>();
         var document = m_firestore_db.collection(COLLECTION_NAME).document(room_name);
@@ -60,8 +60,8 @@ public class RoomRepository
             if (snapshot.exists())
                 throw new RuntimeException("La stanza '" + room_name + "' esiste già!");
 
-            var new_room = new Room(room_name, creator_uid, creator_name, new ArrayList<String>());
-            new_room.users.add(creator_uid);
+            var new_room = new Room(room_name, creator_name, new ArrayList<String>());
+            new_room.users.add(creator_name);
 
             transaction.set(document, new_room);
             return new_room;
@@ -76,15 +76,15 @@ public class RoomRepository
      * Effettua una soft delete di una stanza.
 
      * ESEMPIO:
-     * repository.deleteRoomAsync("NomeStanza", currentUid)
+     * repository.deleteRoomAsync("NomeStanza", username)
      *      .thenRun(() -> { ... })
      *      .exceptionally(ex -> { Log.e(TAG, "Errore: " + ex.getMessage()); return null; });
      *
      * @param room_name ID della stanza da eliminare.
-     * @param uid UID dell'utente che richiede l'eliminazione.
+     * @param username Nome dell'utente che richiede l'eliminazione.
      * @return Un CompletableFuture<Void> che si completa in caso di successo.
      */
-    public CompletableFuture<Void> deleteRoomAsync(String room_name, String uid)
+    public CompletableFuture<Void> deleteRoomAsync(String room_name, String username)
     {
         var future = new CompletableFuture<Void>();
         var document = m_firestore_db.collection(COLLECTION_NAME).document(room_name);
@@ -99,7 +99,7 @@ public class RoomRepository
                 throw new RuntimeException("La stanza non è valida.");
 
             // Solo il creatore può eliminare la stanza
-            if (!room.creator_uid.equals(uid))
+            if (!room.creator_name.equals(username))
                 throw new RuntimeException("Non hai il permesso di eliminare la stanza.");
 
             if (!room.users.isEmpty())

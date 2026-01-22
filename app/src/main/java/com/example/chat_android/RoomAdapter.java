@@ -15,16 +15,13 @@ import java.util.ArrayList;
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder>
 {
     private final ArrayList<Room> m_room_list;
-    private final String m_current_uid;
     private final String m_current_username;
-
 
     public RoomAdapter(@NonNull ArrayList<Room> room_list)
     {
         m_room_list = room_list;
 
         var auth_repo = AuthRepository.getInstance();
-        m_current_uid = auth_repo.getUserUid();
         m_current_username = auth_repo.getUsername();
     }
 
@@ -52,7 +49,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
             holder.icon_is_joined.setVisibility(View.GONE);
 
         // setup colonna 3:icona Supervisor Account
-        if (room.creator_uid.equals(m_current_uid))
+        if (room.creator_name.equals(m_current_username))
             holder.icon_is_owner.setVisibility(View.VISIBLE);
         else
             holder.icon_is_owner.setVisibility(View.GONE);

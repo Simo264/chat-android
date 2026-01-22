@@ -41,15 +41,6 @@
                 android:text="@string/creator_name"
                 android:textColor="?attr/colorOutline" />
 
-            <TextView
-                android:id="@+id/text_creator_uid"
-                style="@style/TextAppearance.Material3.BodyMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/creator_uid"
-                android:textColor="?attr/colorOutline" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

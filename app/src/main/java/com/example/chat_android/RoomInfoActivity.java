@@ -43,8 +43,6 @@ public class RoomInfoActivity extends AppCompatActivity
         text_room_name.setText(room.name);
         TextView text_creator_name = findViewById(R.id.text_creator_name);
         text_creator_name.setText(getString(R.string.creator_name, room.creator_name));
-        TextView text_creator_uid = findViewById(R.id.text_creator_uid);
-        text_creator_uid.setText(getString(R.string.creator_uid, room.creator_uid));
 
         m_room_name = room.name;
         m_user_is_joined = false;
@@ -52,13 +50,11 @@ public class RoomInfoActivity extends AppCompatActivity
         m_text_partecipants = findViewById(R.id.text_partecipants);
         m_chip_group = findViewById(R.id.chip_group_users);
         m_btn_action = findViewById(R.id.btn_action);
-
-        var current_user_uid = AuthRepository.getInstance().getUserUid();
-        if(room.creator_uid.equals(current_user_uid))
+        if(room.creator_name.equals(m_current_username))
         {
             MaterialButton btn_delete = findViewById(R.id.btn_delete_room);
             btn_delete.setVisibility(View.VISIBLE);
-            btn_delete.setOnClickListener(v -> showDeleteConfirmation(room.name, current_user_uid));
+            btn_delete.setOnClickListener(v -> showDeleteConfirmation(room.name, m_current_username));
         }
 
     }
@@ -138,7 +134,7 @@ public class RoomInfoActivity extends AppCompatActivity
 
 
 
-    private void showDeleteConfirmation(String room_name, String user_uid)
+    private void showDeleteConfirmation(String room_name, String username)
     {
         new MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.delete_room))
@@ -146,7 +142,7 @@ public class RoomInfoActivity extends AppCompatActivity
             .setNegativeButton(getString(R.string.cancel), null)
             .setPositiveButton(getString(R.string.delete), (dialog, which) ->
             {
-                RoomRepository.getInstance().deleteRoomAsync(room_name, user_uid)
+                RoomRepository.getInstance().deleteRoomAsync(room_name, username)
                     .thenRun(() ->
                     {
                         runOnUiThread(() ->

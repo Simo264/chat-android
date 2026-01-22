@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity
         MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
         top_app_bar.setTitle(R.string.rooms);
         top_app_bar.inflateMenu(R.menu.main_menu); // Carica il menu specifico
-        top_app_bar.setOnMenuItemClickListener(item -> {
+        top_app_bar.setOnMenuItemClickListener(item ->
+        {
             int id = item.getItemId();
             if(id == R.id.action_profile)
             {
