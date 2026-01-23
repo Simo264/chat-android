@@ -13,7 +13,7 @@
     <string name="delete">Elimina</string>
     <string name="error">Errore</string>
     <string name="ok">Ok</string>
-
+    <string name="rooms">Stanze</string>
 
     <string name="error_empty_fields">Compila tutti i campi</string>
     <string name="error_password_too_short">La password deve avere almeno 6 caratteri</string>
@@ -38,15 +38,19 @@
     <string name="info_timestamp_format">Account creato il: %1$s</string>
     <string name="rooms_counter">(%1$d)</string>
 
-    <string name="fab_view_all_rooms">Visualizza le stanze create</string>
+    <string name="fab_view_all_rooms">Visualizza tutte le stanze</string>
+    <string name="fab_view_created_rooms">Visualizza le stanze create</string>
     <string name="fab_view_joined_rooms">Visualizza le stanze attive</string>
     <string name="fab_create_new_room">Crea una nuova stanza</string>
 
+    <string name="text_all_rooms">Tutte le stanze (%1$d)</string>
+    <string name="text_created_rooms">Le tue stanze create (%1$d)</string>
+    <string name="text_joined_rooms">Stanze di cui fai parte (%1$d)</string>
+
     <string name="confirm_delete_account">Sei sicuro? Questa azione è irreversibile e cancellerà tutti i tuoi dati.</string>
     <string name="confirm_delete_room">Sei sicuro di voler eliminare definitivamente questa stanza?</string>
+    <string name="room_deleted_success">La stanza è stata eliminata con successo!</string>
 
-    <string name="rooms">Stanze</string>
-    <string name="avail_rooms">Stanze disponibili</string>
     <string name="partecipants">Partecipanti: %1$d</string>
     <string name="owner">Proprietario</string>
     <string name="creator_name">Creatore: %1$s</string>
@@ -55,9 +59,13 @@
     <string name="join_and_start_discussion">Entra e inizia la discussione</string>
     <string name="leave_room">Esci dalla stanza</string>
     <string name="delete_room">Elimina la stanza</string>
-    <string name="room_deleted_success">La stanza è stata eliminata con successo!</string>
 
-
+    <string name="create_room_action">Crea stanza</string>
+    <string name="create_room_title">Creazione della stanza</string>
+    <string name="room_name_placeholder">Nome stanza</string>
+    <string name="room_name_hint">Inserisci un nome univoco per la stanza</string>
+    <string name="error_empty_room_name">Il nome non può essere vuoto</string>
+    <string name="success_create_new_room">Stanza creata con successo!</string>
 </resources>
 
 

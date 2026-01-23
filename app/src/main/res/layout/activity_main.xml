@@ -24,24 +24,15 @@
             android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/avail_rooms_label"
+                android:id="@+id/text_rooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/avail_rooms"
+                android:text="@string/text_all_rooms"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/avail_rooms_counter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/avail_rooms_label"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="8dp"
-                android:text="@string/rooms_counter" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_all_rooms"
+            android:id="@+id/recycler_rooms"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

@@ -6,6 +6,10 @@
         android:title="@string/fab_view_all_rooms" />
 
     <item
+        android:id="@+id/fab_view_created_rooms"
+        android:title="@string/fab_view_created_rooms" />
+
+    <item
         android:id="@+id/fab_view_joined_rooms"
         android:title="@string/fab_view_joined_rooms" />
 
