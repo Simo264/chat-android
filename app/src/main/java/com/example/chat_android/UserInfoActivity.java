@@ -18,14 +18,12 @@ public class UserInfoActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        var auth_repo = AuthRepository.getInstance();
-        if (!auth_repo.isUserLoggedIn())
-            throw new RuntimeException(getString(R.string.error_user_not_authenticated));
-
         MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
         top_app_bar.setTitle(R.string.user_profile);
         top_app_bar.setNavigationIcon(R.drawable.chevron_left_24);
         top_app_bar.setNavigationOnClickListener(v -> finish());
+
+        var auth_repo = AuthRepository.getInstance();
 
         TextView tv_username = findViewById(R.id.info_username);
         TextView tv_email = findViewById(R.id.info_email);
@@ -37,7 +35,8 @@ public class UserInfoActivity extends AppCompatActivity
         tv_timestamp.setText(getString(R.string.info_timestamp_format, auth_repo.getUserCreationTime()));
 
         Button btn_logout = findViewById(R.id.btn_signout);
-        btn_logout.setOnClickListener(v -> {
+        btn_logout.setOnClickListener(v ->
+        {
             auth_repo.signOut();
             var intent = new Intent(UserInfoActivity.this, AuthActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -44,9 +44,9 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
         // setup colonna 2: icona Bookmark Check
         if (room.users.contains(m_current_username))
-            holder.icon_is_joined.setVisibility(View.VISIBLE);
+            holder.icon_chat.setVisibility(View.VISIBLE);
         else
-            holder.icon_is_joined.setVisibility(View.GONE);
+            holder.icon_chat.setVisibility(View.GONE);
 
         // setup colonna 3:icona Supervisor Account
         if (room.creator_name.equals(m_current_username))
@@ -54,7 +54,15 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         else
             holder.icon_is_owner.setVisibility(View.GONE);
 
-        // Click sulla card
+        // click sull'icona chat
+        holder.icon_chat.setOnClickListener(v ->
+        {
+            var intent = new Intent(context, ChatRoomActivity.class);
+            intent.putExtra("ROOM_OBJECT", room);
+            context.startActivity(intent);
+        });
+
+        // click sulla card
         holder.itemView.setOnClickListener(v ->
         {
             var intent = new Intent(context, RoomInfoActivity.class);
@@ -80,14 +88,14 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     {
         public TextView text_room_name;
         public TextView text_user_count;
-        public ImageView icon_is_joined;
+        public ImageView icon_chat;
         public ImageView icon_is_owner;
         public RoomViewHolder(@NonNull View itemView)
         {
             super(itemView);
             text_room_name = itemView.findViewById(R.id.text_room_name);
             text_user_count = itemView.findViewById(R.id.text_user_count_item);
-            icon_is_joined = itemView.findViewById(R.id.icon_is_joined);
+            icon_chat = itemView.findViewById(R.id.icon_chat);
             icon_is_owner = itemView.findViewById(R.id.icon_is_owner);
         }
     }

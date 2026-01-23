@@ -10,7 +10,8 @@
     app:cardElevation="0dp"
     style="?attr/materialCardViewFilledStyle">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,20 +46,20 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/icon_is_joined"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/bookmark_check_24"
-            android:visibility="gone"
-            app:tint="?attr/colorSecondary" />
+            android:id="@+id/icon_chat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/chat_24"
+            android:padding="8dp"
+            app:tint="?attr/colorPrimary" />
 
         <ImageView
             android:id="@+id/icon_is_owner"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/supervisor_account_24"
-            android:visibility="gone"
+            android:visibility="visible"
             app:tint="?attr/colorPrimary" />
 
     </LinearLayout>

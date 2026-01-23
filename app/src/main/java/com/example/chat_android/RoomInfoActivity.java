@@ -37,7 +37,11 @@ public class RoomInfoActivity extends AppCompatActivity
 
         var room = getIntent().getParcelableExtra("ROOM_OBJECT", RoomParcel.class);
         if(room == null)
-            throw new RuntimeException("ROOM_OBJECT non valido.");
+        {
+            Toast.makeText(this,  getString(R.string.error_retrieve_room), Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         TextView text_room_name = findViewById(R.id.text_room_name);
         text_room_name.setText(room.name);

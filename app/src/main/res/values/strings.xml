@@ -66,6 +66,9 @@
     <string name="room_name_hint">Inserisci un nome univoco per la stanza</string>
     <string name="error_empty_room_name">Il nome non può essere vuoto</string>
     <string name="success_create_new_room">Stanza creata con successo!</string>
+    <string name="error_retrieve_room">Errore caricamento stanza</string>
+
+    <string name="chat_room_title">Stanza di chat: %1$s</string>
 </resources>
 
 
