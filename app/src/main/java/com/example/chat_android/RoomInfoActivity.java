@@ -35,7 +35,7 @@ public class RoomInfoActivity extends AppCompatActivity
         top_app_bar.setNavigationIcon(R.drawable.chevron_left_24);
         top_app_bar.setNavigationOnClickListener(v -> finish());
 
-        var room = getIntent().getParcelableExtra("ROOM_OBJECT", Room.class);
+        var room = getIntent().getParcelableExtra("ROOM_OBJECT", RoomParcel.class);
         if(room == null)
             throw new RuntimeException("ROOM_OBJECT non valido.");
 
@@ -49,14 +49,13 @@ public class RoomInfoActivity extends AppCompatActivity
         m_current_username = AuthRepository.getInstance().getUsername();
         m_text_partecipants = findViewById(R.id.text_partecipants);
         m_chip_group = findViewById(R.id.chip_group_users);
-        m_btn_action = findViewById(R.id.btn_action);
+        m_btn_action = findViewById(R.id.btn_action_join_leave);
         if(room.creator_name.equals(m_current_username))
         {
             MaterialButton btn_delete = findViewById(R.id.btn_delete_room);
             btn_delete.setVisibility(View.VISIBLE);
             btn_delete.setOnClickListener(v -> showDeleteConfirmation(room.name, m_current_username));
         }
-
     }
 
     @Override
@@ -68,11 +67,11 @@ public class RoomInfoActivity extends AppCompatActivity
         room_repo.observeRoom(m_room_name, new SingleRoomListener()
         {
             @Override
-            public void onRoomUpdated(Room room)
+            public void onRoomUpdated(RoomParcel room)
             {
                 runOnUiThread(() ->
                 {
-                    m_text_partecipants.setText(getString(R.string.partecipants, room.getUserCount()));
+                    m_text_partecipants.setText(getString(R.string.partecipants, room.users.size()  ));
                     m_chip_group.removeAllViews();
                     m_user_is_joined = false;
                     for (var username : room.users)
@@ -131,8 +130,6 @@ public class RoomInfoActivity extends AppCompatActivity
         super.onStop();
         RoomRepository.getInstance().removeSingleRoomListener();
     }
-
-
 
     private void showDeleteConfirmation(String room_name, String username)
     {

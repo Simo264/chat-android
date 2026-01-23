@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity
         RoomRepository.getInstance().observeAllRooms(new RoomsListener()
         {
             @Override
-            public void onRoomsUpdated(ArrayList<Room> all_rooms)
+            public void onRoomsUpdated(ArrayList<RoomParcel> all_rooms)
             {
-                var filtered_rooms = new ArrayList<Room>();
+                var filtered_rooms = new ArrayList<RoomParcel>();
                 switch (m_current_filter)
                 {
                     case ALL:
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
                         m_text_rooms.setText(getString(R.string.text_all_rooms, filtered_rooms.size()));
                         break;
                     case JOINED:
-                        for (Room r : all_rooms)
+                        for (var r : all_rooms)
                             if (r.users.contains(m_current_username))
                                 filtered_rooms.add(r);
                         m_text_rooms.setText(getString(R.string.text_joined_rooms, filtered_rooms.size()));
@@ -123,12 +123,12 @@ public class MainActivity extends AppCompatActivity
                         break;
                 }
 
-                final ArrayList<Room> final_rooms = filtered_rooms;
+                var final_rooms = filtered_rooms;
                 runOnUiThread(() ->
                 {
                     if (m_room_adapter == null)
                     {
-                        m_room_adapter = new RoomAdapter(final_rooms);
+                        m_room_adapter = new RoomAdapter(final_rooms, m_current_username);
                         m_recycler_rooms.setAdapter(m_room_adapter);
                     }
                     else

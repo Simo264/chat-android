@@ -73,7 +73,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_action"
+            android:id="@+id/btn_action_join_leave"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -84,9 +84,9 @@
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:text="@string/delete_room"
             android:textColor="?attr/colorError"
+            android:visibility="gone"
             app:iconTint="?attr/colorError" />
 
     </LinearLayout>

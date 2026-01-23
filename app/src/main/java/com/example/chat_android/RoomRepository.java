@@ -50,9 +50,9 @@ public class RoomRepository
      * @param creator_name Il nome dell'utente che crea la stanza.
      * @return Un CompletableFuture che contiene l'oggetto Room creato.
      */
-    public CompletableFuture<Room> createRoomAsync(String room_name, String creator_name)
+    public CompletableFuture<RoomEntity> createRoomAsync(String room_name, String creator_name)
     {
-        var future = new CompletableFuture<Room>();
+        var future = new CompletableFuture<RoomEntity>();
         var document = m_firestore_db.collection(COLLECTION_NAME).document(room_name);
         m_firestore_db.runTransaction(transaction ->
         {
@@ -60,7 +60,7 @@ public class RoomRepository
             if (snapshot.exists())
                 throw new RuntimeException("La stanza '" + room_name + "' esiste già!");
 
-            var new_room = new Room(room_name, creator_name, new ArrayList<String>());
+            var new_room = new RoomEntity(room_name, creator_name);
             new_room.users.add(creator_name);
 
             transaction.set(document, new_room);
@@ -94,7 +94,7 @@ public class RoomRepository
             if (!snapshot.exists())
                 throw new RuntimeException("Impossibile eliminare: la stanza '" + room_name + "' non esiste.");
 
-            var room = snapshot.toObject(Room.class);
+            var room = snapshot.toObject(RoomEntity.class);
             if(room == null)
                 throw new RuntimeException("La stanza non è valida.");
 
@@ -152,7 +152,11 @@ public class RoomRepository
                 }
                 if (snapshots != null)
                 {
-                    var rooms = new ArrayList<Room>(snapshots.toObjects(Room.class));
+                    var room_entities = snapshots.toObjects(RoomEntity.class);
+                    var rooms = new ArrayList<RoomParcel>();
+                    for(var e : room_entities)
+                        rooms.add(new RoomParcel(e));
+
                     listener.onRoomsUpdated(rooms);
                 }
             });
@@ -173,8 +177,9 @@ public class RoomRepository
                 }
                 if (snapshot != null && snapshot.exists())
                 {
-                    var room = snapshot.toObject(Room.class);
-                    listener.onRoomUpdated(room);
+                    var room_entity = snapshot.toObject(RoomEntity.class);
+                    if(room_entity != null)
+                        listener.onRoomUpdated(new RoomParcel(room_entity));
                 }
             });
     }

@@ -14,15 +14,15 @@ import java.util.ArrayList;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder>
 {
-    private final ArrayList<Room> m_room_list;
+    private final ArrayList<RoomParcel> m_room_list;
     private final String m_current_username;
 
-    public RoomAdapter(@NonNull ArrayList<Room> room_list)
+    public RoomAdapter(@NonNull ArrayList<RoomParcel> room_list, @NonNull String current_username)
     {
         m_room_list = room_list;
 
         var auth_repo = AuthRepository.getInstance();
-        m_current_username = auth_repo.getUsername();
+        m_current_username = current_username;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
 
         // setup colonna 1
         holder.text_room_name.setText(room.name);
-        holder.text_user_count.setText(context.getString(R.string.partecipants, room.getUserCount()));
+        holder.text_user_count.setText(context.getString(R.string.partecipants, room.users.size()));
 
         // setup colonna 2: icona Bookmark Check
         if (room.users.contains(m_current_username))
@@ -69,10 +69,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         return m_room_list.size();
     }
 
-    public void updateRooms(ArrayList<Room> newRooms)
+    public void updateRooms(ArrayList<RoomParcel> new_rooms)
     {
         m_room_list.clear();
-        m_room_list.addAll(newRooms);
+        m_room_list.addAll(new_rooms);
         notifyDataSetChanged();
     }
 
