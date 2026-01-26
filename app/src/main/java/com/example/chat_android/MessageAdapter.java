@@ -87,7 +87,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 m_tv_sender_name.setGravity(Gravity.END);
                 m_tv_message_text.setGravity(Gravity.END);
                 m_tv_timestamp.setGravity(Gravity.END);
-
             }
             else
             {

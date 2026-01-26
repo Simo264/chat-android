@@ -144,6 +144,11 @@ public class RoomInfoActivity extends AppCompatActivity
             .setPositiveButton(getString(R.string.delete), (dialog, which) ->
             {
                 RoomRepository.getInstance().deleteRoomAsync(room_name, username)
+                    .thenCompose(v ->
+                    {
+                        // solo se la prima ha successo, eliminiamo fisicamente i messaggi
+                        return MessageRepository.getInstance().removeChatDocument(room_name);
+                    })
                     .thenRun(() ->
                     {
                         runOnUiThread(() ->

@@ -34,6 +34,42 @@ e ricevere notifiche in tempo reale.
 - Invio di foto/video dalla galleria o fotocamera
 - Storage dei contenuti multimediali su Firebase Storage
 
+## Struttura del database (firestore)
+
+Il progetto utilizza Firebase Firestore come database documentale. 
+La struttura è organizzata in due collezioni principali: `rooms` e `messages`. 
+
+La collezione `rooms` gestisce l'esistenza, i metadati e lo stato di ogni stanza:
+
+- **id-documento**: rappresenta il nome della stanza (es: "Generale", "Sviluppatori")
+- **nome**: il nome identificativo della stanza
+- **creator_name**: username dell'utente che ha creato la stanza
+- **users**: elenco degli utenti attualmente presenti nella stanza
+- **is_delete**: flag per il soft-delete 
+
+La collezione `messages` gestisce i contenuti delle chat. 
+Ogni documento in questa collezione funge da contenitore per i messaggi di una 
+specifica stanza.
+
+- **id-documento**: rappresenta il nome della stanza (corrispondente all'ID 
+nella collezione `rooms`)
+
+All'interno di ogni documento stanza, i messaggi sono salvati in questa raccolta 
+dedicata.
+
+- **from**: username del mittente
+- **text**: il contenuto testuale del messaggio
+- **timestamp**: data di invio 
+
+Nota: quando una stanza viene eliminata, il campo `is_delete` in `rooms` 
+viene impostato a `true`. 
+Questo permette di mantenere l'ID storico impedendo nuove creazioni con lo stesso 
+nome a meno di sovrascrittura.
+Durante l'eliminazione definitiva di una stanza da parte del creatore, 
+la sotto-collezione `room_messages` viene svuotata fisicamente per ottimizzare 
+lo storage.
+
+
 ## Architettura del sistema
 
 Il progetto adotta un'architettura client-server distribuita dove le 

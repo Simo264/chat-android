@@ -7,6 +7,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class MessageRepository
 {
@@ -33,6 +34,32 @@ public class MessageRepository
 
         }
         return m_instance;
+    }
+
+    public CompletableFuture<Void> removeChatDocument(String room_name)
+    {
+        var future = new CompletableFuture<Void>();
+        var room_messages = m_firestore_db
+            .collection(COLLECTION_NAME)
+            .document(room_name)
+            .collection("room_messages");
+
+        room_messages.get()
+            .addOnSuccessListener(querySnapshot ->
+            {
+                var batch = m_firestore_db.batch();
+                for (var document : querySnapshot.getDocuments())
+                    batch.delete(document.getReference());
+
+                var main_chat_doc = m_firestore_db.collection(COLLECTION_NAME).document(room_name);
+                batch.delete(main_chat_doc);
+                batch.commit()
+                    .addOnSuccessListener(aVoid -> future.complete(null))
+                    .addOnFailureListener(future::completeExceptionally);
+
+            })
+            .addOnFailureListener(future::completeExceptionally);
+        return future;
     }
 
     public void sendMessage(String room_name, String sender, MessageEntity message)
