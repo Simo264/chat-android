@@ -20,8 +20,6 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
     public RoomAdapter(@NonNull ArrayList<RoomParcel> room_list, @NonNull String current_username)
     {
         m_room_list = room_list;
-
-        var auth_repo = AuthRepository.getInstance();
         m_current_username = current_username;
     }
 
@@ -38,17 +36,17 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.RoomViewHolder
         var room = m_room_list.get(position);
         var context = holder.itemView.getContext();
 
-        // setup colonna 1
+        // nome stanza + user_count
         holder.text_room_name.setText(room.name);
         holder.text_user_count.setText(context.getString(R.string.partecipants, room.users.size()));
 
-        // setup colonna 2: icona Bookmark Check
+        // icona Bookmark Check
         if (room.users.contains(m_current_username))
             holder.icon_chat.setVisibility(View.VISIBLE);
         else
             holder.icon_chat.setVisibility(View.GONE);
 
-        // setup colonna 3:icona Supervisor Account
+        // icona Supervisor Account
         if (room.creator_name.equals(m_current_username))
             holder.icon_is_owner.setVisibility(View.VISIBLE);
         else

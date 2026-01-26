@@ -13,8 +13,6 @@
         android:id="@+id/included_app_bar" />
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -99,35 +97,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/signout"
                         app:icon="@drawable/logout_24"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/security"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="12dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_delete_account"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/delete_account"
-                        android:textColor="#B00020"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

@@ -14,6 +14,7 @@
     <string name="error">Errore</string>
     <string name="ok">Ok</string>
     <string name="rooms">Stanze</string>
+    <string name="you">Tu</string>
 
     <string name="error_empty_fields">Compila tutti i campi</string>
     <string name="error_password_too_short">La password deve avere almeno 6 caratteri</string>
@@ -69,6 +70,7 @@
     <string name="error_retrieve_room">Errore caricamento stanza</string>
 
     <string name="chat_room_title">Stanza di chat: %1$s</string>
+    <string name="write_message">Scrivi un messaggio &#8230;</string>
 </resources>
 
 

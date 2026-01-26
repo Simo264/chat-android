@@ -42,23 +42,20 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
-            android:id="@+id/edit_chat_message"
+            android:id="@+id/input_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Scrivi un messaggio..."
+            android:hint="@string/write_message"
             android:inputType="textCapSentences|textMultiLine"
             android:maxLines="4"
             android:padding="12dp" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <Button
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/send_24"
-            app:tint="@android:color/white" />
+            android:text="@string/submit" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

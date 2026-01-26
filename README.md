@@ -3,41 +3,36 @@
 ## Descrizione generale
 
 Un'applicazione di messaggistica che permette agli utenti di creare e partecipare
-a stanze di chat in tempo reale, ispirata a Discord. 
-Gli utenti possono comunicare in canali (stanze), condividere contenuti multimediali 
+a stanze di chat in tempo reale, ispirata a Discord.
+Gli utenti possono comunicare in canali (stanze), condividere contenuti multimediali
 e ricevere notifiche in tempo reale.
 
 ## Funzionalità principali
 
 ### 1. Autenticazione utenti
 
-- Registrazione e login tramite email/password
-- Autenticazione con Firebase Authentication
-- Profilo utente personalizzabile (nome, avatar, stato)
+- Registrazione, login e logout tramite Firebase Authentication
+- Visualizzazione dei metadati dell'utente in un'activity dedicata (username, email, uid, data creazione)
 
 ### 2. Gestione stanze
 
-- Creazione/cancellazione di stanze
-- Lista delle stanze disponibili con ricerca
-- Meccanismi di join/leave nelle stanze
-- Possibilità eliminare stanze (solo per il creatore)
-- Conteggio membri in tempo reale
+- Creazione di nuove stanze
+- Eliminazione stanze (solo per il proprietario)
+- Lista delle stanze disponibili con filtri: visualizza tutte le stanze, visualizza stanze create dall'utente, visualizza stanze attive in cui l'utente partecipa
+- Possibilità di entrare/uscire da qualsiasi stanza in qualsiasi momento
+- Aggiornamenti in tempo reale del numero di partecipanti per ogni stanza, delle stanze presenti e nuove stanze create, della lista degli utenti presenti in una specifica stanza
 
 ### 3. Messaggistica real-time
 
-- Invio e ricezione messaggi testuali (opzionalmente anche contenuti multimediali)
-- Timestamp e informazioni mittente
-- Stato dei messaggi (inviato, consegnato, letto)
+- Invio di messaggi testuali
+- Visualizzazione in tempo reale dei messaggi
+- I messaggi vengono ricevuti da tutti gli utenti presenti nella stanza
+- (Opzionale) Notifiche push per ogni messaggio ricevuto
 
 ### 4. Contenuti multimediali (opzionale)
 
-- Invio di immagini dalla galleria o fotocamera
-- Storage delle immagini su Firebase Storage
-
-### 5. Notifiche
-
-- Notifiche push per nuovi messaggi
-- Notifiche solo quando l'app è in background
+- Invio di foto/video dalla galleria o fotocamera
+- Storage dei contenuti multimediali su Firebase Storage
 
 ## Architettura del sistema
 

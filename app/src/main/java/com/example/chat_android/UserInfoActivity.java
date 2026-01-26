@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class UserInfoActivity extends AppCompatActivity
 {
@@ -43,20 +42,5 @@ public class UserInfoActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         });
-
-        Button btn_delete = findViewById(R.id.btn_delete_account);
-        btn_delete.setOnClickListener(v -> { showDeleteConfirmation(); });
-    }
-
-    private void showDeleteConfirmation()
-    {
-        new MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.delete_account))
-            .setMessage(getString(R.string.confirm_delete_account))
-            .setPositiveButton(getString(R.string.delete), (d, w) -> {
-                // todo
-            })
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show();
     }
 }
