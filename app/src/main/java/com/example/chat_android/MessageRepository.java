@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -68,7 +70,7 @@ public class MessageRepository
         return future;
     }
 
-    public void sendMessage(String room_name, MessageEntity message, SendMessageCallback callback)
+    public void sendMessage(String room_name, @NonNull MessageEntity message, SendMessageCallback callback)
     {
         // Se non c'è media, salva direttamente
         if (message.media_url.isEmpty())
@@ -102,7 +104,7 @@ public class MessageRepository
             if (task.isSuccessful())
             {
                 var public_url = task.getResult().toString();
-                var message_to_save = new MessageEntity(message.text, public_url, message.from);
+                var message_to_save = new MessageEntity(message.text, public_url, message.media_type, message.from);
                 saveToFirestore(room_name, message_to_save);
 
                 if (callback != null)
@@ -161,8 +163,6 @@ public class MessageRepository
             m_messages_listener = null;
         }
     }
-
-
 
     private String getFileExtension(Uri uri)
     {

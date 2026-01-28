@@ -1,51 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="4dp">
 
+    <!-- MESSAGE BUBBLE -->
     <LinearLayout
         android:id="@+id/message_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:maxWidth="280dp">
 
-
+        <!-- SENDER -->
         <TextView
             android:id="@+id/tv_sender_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="[Username]"
             android:textStyle="bold"
-            android:textSize="14sp"
-            android:textColor="@android:color/black" />
+            android:textSize="13sp"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_message_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="4dp"
-            android:scaleType="centerCrop"
-            android:visibility="visible"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent" />
+        <!-- MEDIA -->
+        <FrameLayout
+            android:id="@+id/media_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:visibility="gone">
 
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/iv_message_image"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.MediumComponent" />
+
+            <!-- VIDEO OVERLAY -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#66000000"
+                android:visibility="gone"
+                android:id="@+id/video_overlay"/>
+
+            <ImageView
+                android:id="@+id/iv_play_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_media_play"
+                android:contentDescription="play video"
+                android:visibility="gone"
+                app:tint="?attr/colorOnSurface" />
+
+        </FrameLayout>
+
+        <!-- MESSAGE TEXT -->
         <TextView
             android:id="@+id/tv_message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="[Testo del messaggio]"
+            android:layout_marginTop="6dp"
             android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            android:textColor="?attr/colorOnSurface" />
 
+        <!-- TIMESTAMP -->
         <TextView
             android:id="@+id/tv_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="[10:30]"
-            android:textSize="12sp"
-            android:textColor="@android:color/darker_gray" />
+            android:textSize="11sp"
+            android:textColor="?attr/colorOutline" />
+
     </LinearLayout>
+
 </FrameLayout>

@@ -1,5 +1,8 @@
 package com.example.chat_android;
 
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.color.MaterialColors;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,7 +72,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         private final TextView m_tv_message_text;
         private final TextView m_tv_timestamp;
         private final LinearLayout m_message_container;
+        private final FrameLayout m_media_container;
         private final ImageView m_message_image;
+        private final ImageView m_play_button;
 
         public MessageViewHolder(@NonNull View itemView)
         {
@@ -74,46 +83,89 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             m_tv_message_text = itemView.findViewById(R.id.tv_message_text);
             m_tv_timestamp = itemView.findViewById(R.id.tv_timestamp);
             m_message_container = itemView.findViewById(R.id.message_container);
+            m_media_container = itemView.findViewById(R.id.media_container);
             m_message_image = itemView.findViewById(R.id.iv_message_image);
+            m_play_button = itemView.findViewById(R.id.iv_play_button);
         }
 
         public void bind(@NonNull MessageEntity message, String current_username)
         {
             var is_own_message = message.from.equals(current_username);
+            var attr_background = is_own_message
+                ? com.google.android.material.R.attr.colorPrimaryContainer
+                : com.google.android.material.R.attr.colorSecondaryContainer;
+            var attr_on_background = is_own_message
+                ? com.google.android.material.R.attr.colorOnPrimaryContainer
+                : com.google.android.material.R.attr.colorOnSecondaryContainer;
+            var background_color = MaterialColors.getColor(m_message_container, attr_background);
+            var text_color = MaterialColors.getColor(m_message_container, attr_on_background);
+            var shape_drawable = new MaterialShapeDrawable(ShapeAppearanceModel.builder()
+                .setAllCorners(CornerFamily.ROUNDED, 16f * m_message_container.getResources().getDisplayMetrics().density)
+                .build()
+            );
+            shape_drawable.setFillColor(ColorStateList.valueOf(background_color));
+            m_message_container.setBackground(shape_drawable);
+            m_tv_sender_name.setText(is_own_message ? m_tv_sender_name.getContext().getString(R.string.you) : message.from);
+            m_tv_sender_name.setTextColor(text_color);
+            m_tv_message_text.setTextColor(text_color);
 
-            // Stampa lo username
-            if (is_own_message)
-                m_tv_sender_name.setText(m_tv_sender_name.getContext().getString(R.string.you));
-            else
-                m_tv_sender_name.setText(message.from);
-
-            // messaggio a destra se il messaggio l'ho inviato io, a sinistra altrimenti
+            var gravity = is_own_message ? Gravity.END : Gravity.START;
             var params = (FrameLayout.LayoutParams) m_message_container.getLayoutParams();
-            var gravity = Gravity.START;
-            if(is_own_message)
-                gravity = Gravity.END;
-
             params.gravity = gravity;
             m_tv_sender_name.setGravity(gravity);
             m_tv_message_text.setGravity(gravity);
             m_tv_timestamp.setGravity(gravity);
             m_message_container.setLayoutParams(params);
 
-            // mostra l'immagine (se presente)
             if (!message.media_url.isEmpty())
             {
-                m_message_image.setVisibility(View.VISIBLE);
-                Glide.with(m_message_image.getContext())
-                    .load(message.media_url)
-                    .centerCrop()
-                    .into(m_message_image);
+                m_media_container.setVisibility(View.VISIBLE);
+                if (message.media_type.equals(MessageEntity.MEDIA_VIDEO))
+                {
+                    m_play_button.setVisibility(View.VISIBLE);
+
+                    // Carica la thumbnail del video
+                    Glide.with(m_message_image.getContext())
+                        .load(message.media_url)
+                        .centerCrop()
+                        .into(m_message_image);
+
+                    // Click listener per aprire il video
+                    m_media_container.setOnClickListener(v ->
+                    {
+                        var intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(message.media_url), "video/*");
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        if (intent.resolveActivity(v.getContext().getPackageManager()) != null)
+                            v.getContext().startActivity(intent);
+                    });
+                }
+                else
+                {
+                    m_play_button.setVisibility(View.GONE);
+                    Glide.with(m_message_image.getContext())
+                        .load(message.media_url)
+                        .centerCrop()
+                        .into(m_message_image);
+
+                    // Click listener per aprire l'immagine a schermo intero
+                    m_media_container.setOnClickListener(v ->
+                    {
+                        var intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(message.media_url), "image/*");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        if (intent.resolveActivity(v.getContext().getPackageManager()) != null)
+                            v.getContext().startActivity(intent);
+                    });
+                }
             }
             else
             {
-                m_message_image.setVisibility(View.GONE);
+                m_media_container.setVisibility(View.GONE);
+                m_media_container.setOnClickListener(null);
             }
 
-            // mostra il testo del messaggio (se presente)
+            // visualizzo il testo
             if (!message.text.isEmpty())
             {
                 m_tv_message_text.setVisibility(View.VISIBLE);
@@ -124,7 +176,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 m_tv_message_text.setVisibility(View.GONE);
             }
 
-            // mostra il timestamp
             m_tv_timestamp.setText(formatTimestamp(message.timestamp));
         }
 

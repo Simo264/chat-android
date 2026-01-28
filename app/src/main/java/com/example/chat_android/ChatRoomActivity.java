@@ -1,6 +1,10 @@
 package com.example.chat_android;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +20,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
@@ -31,10 +37,10 @@ public class ChatRoomActivity extends AppCompatActivity
     private EditText m_input_text;
     private View m_container_preview_wrapper;
     private ImageView m_img_preview;
-    private String m_selected_image_uri;
+    private String m_selected_image_uri = "";
+    private String m_selected_media_type = "";
     private Button m_btn_send;
     private LinearProgressIndicator m_upload_bar;
-
     private ActivityResultLauncher<PickVisualMediaRequest> m_photo_picker_launcher;
 
     @Override
@@ -63,15 +69,24 @@ public class ChatRoomActivity extends AppCompatActivity
         m_upload_bar.setVisibility(View.GONE);
         m_btn_send = findViewById(R.id.btn_send);
         m_btn_send.setOnClickListener(v -> send());
-        m_selected_image_uri = "";
         m_photo_picker_launcher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri ->
         {
             if (uri != null)
             {
                 m_selected_image_uri = uri.toString();
-                m_img_preview.setImageURI(uri);
+
+                var mime_type = getContentResolver().getType(uri);
+                if (mime_type != null && mime_type.startsWith("video/"))
+                {
+                    m_selected_media_type = MessageEntity.MEDIA_VIDEO;
+                    showVideoThumbnail(uri);
+                }
+                else
+                {
+                    m_selected_media_type = MessageEntity.MEDIA_IMAGE;
+                    m_img_preview.setImageURI(uri);
+                }
                 m_container_preview_wrapper.setVisibility(View.VISIBLE);
-                Log.d("GALLERY_DEBUG", "URI selezionato: " + m_selected_image_uri);
             }
         });
 
@@ -130,6 +145,18 @@ public class ChatRoomActivity extends AppCompatActivity
         MessageRepository.getInstance().removeMessagesListener();
     }
 
+
+    private void showVideoThumbnail(Uri video_uri)
+    {
+        Glide.with(m_img_preview)
+            .asBitmap()
+            .load(video_uri)
+            .frame(1_000_000) // 1 secondo
+            .centerCrop()
+            .error(new ColorDrawable(MaterialColors.getColor(m_img_preview, com.google.android.material.R.attr.colorSurfaceVariant)))
+            .into(m_img_preview);
+    }
+
     private void initTopAppBar()
     {
         MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
@@ -168,6 +195,7 @@ public class ChatRoomActivity extends AppCompatActivity
         var message_entity = new MessageEntity(
             message_text,
             m_selected_image_uri,  // URI locale o stringa vuota
+            m_selected_media_type,
             m_current_username
         );
         MessageRepository.getInstance().sendMessage(m_room.name, message_entity, new SendMessageCallback()
@@ -209,6 +237,7 @@ public class ChatRoomActivity extends AppCompatActivity
 
         m_input_text.setText("");
         m_selected_image_uri = "";
+        m_selected_media_type = "";
         m_container_preview_wrapper.setVisibility(View.GONE);
     }
 
