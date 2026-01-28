@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,8 @@ public class ChatRoomActivity extends AppCompatActivity
     private View m_container_preview_wrapper;
     private ImageView m_img_preview;
     private String m_selected_image_uri;
+    private Button m_btn_send;
+    private LinearProgressIndicator m_upload_bar;
 
     private ActivityResultLauncher<PickVisualMediaRequest> m_photo_picker_launcher;
 
@@ -56,6 +59,10 @@ public class ChatRoomActivity extends AppCompatActivity
         m_container_preview_wrapper = findViewById(R.id.container_preview_wrapper);
         m_container_preview_wrapper.setVisibility(View.GONE);
         m_img_preview = findViewById(R.id.img_preview);
+        m_upload_bar = findViewById(R.id.upload_progress_bar);
+        m_upload_bar.setVisibility(View.GONE);
+        m_btn_send = findViewById(R.id.btn_send);
+        m_btn_send.setOnClickListener(v -> send());
         m_selected_image_uri = "";
         m_photo_picker_launcher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri ->
         {
@@ -68,22 +75,7 @@ public class ChatRoomActivity extends AppCompatActivity
             }
         });
 
-        MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
-        top_app_bar.setTitle(getString(R.string.chat_room_title, m_room.name));
-        top_app_bar.inflateMenu(R.menu.chat_menu);
-        top_app_bar.setNavigationIcon(R.drawable.chevron_left_24);
-        top_app_bar.setNavigationOnClickListener(v -> finish());
-        top_app_bar.setOnMenuItemClickListener(item ->
-        {
-            if(item.getItemId() == R.id.action_info)
-            {
-                var intent = new Intent(ChatRoomActivity.this, RoomInfoActivity.class);
-                intent.putExtra("ROOM_OBJECT", m_room);
-                startActivity(intent);
-                return true;
-            }
-            return false;
-        });
+        initTopAppBar();
 
         MaterialButton btn_remove_image = findViewById(R.id.btn_remove_image);
         btn_remove_image.setOnClickListener(v ->
@@ -98,8 +90,6 @@ public class ChatRoomActivity extends AppCompatActivity
         });
         ImageButton btn_gallery = findViewById(R.id.btn_gallery);
         btn_gallery.setOnClickListener(v -> openPhotoPicker());
-        Button btn_send = findViewById(R.id.btn_send);
-        btn_send.setOnClickListener(v -> send());
     }
 
     @Override
@@ -140,18 +130,82 @@ public class ChatRoomActivity extends AppCompatActivity
         MessageRepository.getInstance().removeMessagesListener();
     }
 
+    private void initTopAppBar()
+    {
+        MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
+        top_app_bar.setTitle(getString(R.string.chat_room_title, m_room.name));
+        top_app_bar.inflateMenu(R.menu.chat_menu);
+        top_app_bar.setNavigationIcon(R.drawable.chevron_left_24);
+        top_app_bar.setNavigationOnClickListener(v -> finish());
+        top_app_bar.setOnMenuItemClickListener(item ->
+        {
+            if(item.getItemId() == R.id.action_info)
+            {
+                var intent = new Intent(ChatRoomActivity.this, RoomInfoActivity.class);
+                intent.putExtra("ROOM_OBJECT", m_room);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
+    }
+
     private void send()
     {
         var message_text = m_input_text.getText().toString().trim();
         if (message_text.isEmpty() && m_selected_image_uri.isEmpty())
             return;
 
+        var has_image = !m_selected_image_uri.isEmpty();
+        if (has_image)
+        {
+            // Mostra progress bar o disabilita il pulsante
+            m_btn_send.setEnabled(false);
+            m_upload_bar.setVisibility(View.VISIBLE);
+            m_upload_bar.setProgress(0);
+        }
+
         var message_entity = new MessageEntity(
             message_text,
             m_selected_image_uri,  // URI locale o stringa vuota
             m_current_username
         );
-        MessageRepository.getInstance().sendMessage(m_room.name, message_entity);
+        MessageRepository.getInstance().sendMessage(m_room.name, message_entity, new SendMessageCallback()
+        {
+            @Override
+            public void onProgress(int progress)
+            {
+                runOnUiThread(() ->
+                {
+                    if (m_upload_bar.getVisibility() != View.VISIBLE)
+                        m_upload_bar.setVisibility(View.VISIBLE);
+
+                    m_upload_bar.setProgress(progress, true);
+                });
+            }
+
+            @Override
+            public void onSuccess()
+            {
+                runOnUiThread(() ->
+                {
+                    m_btn_send.setEnabled(true);
+                    m_upload_bar.setVisibility(View.GONE);
+                    m_upload_bar.setProgress(0);
+                });
+            }
+
+            @Override
+            public void onError(Exception e)
+            {
+                runOnUiThread(() ->
+                {
+                    m_btn_send.setEnabled(true);
+                    m_upload_bar.setVisibility(View.GONE);
+                    Log.d("UPLOAD", "Errore invio: " + e.toString());
+                });
+            }
+        });
 
         m_input_text.setText("");
         m_selected_image_uri = "";

@@ -28,6 +28,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/upload_progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:indicatorColor="?attr/colorPrimary"
+        app:trackColor="?attr/colorSurfaceVariant"
+        app:layout_constraintBottom_toTopOf="@+id/container_preview_wrapper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <FrameLayout
         android:id="@+id/container_preview_wrapper"
         android:layout_width="match_parent"

@@ -68,41 +68,53 @@ public class MessageRepository
         return future;
     }
 
-    public void sendMessage(String room_name, MessageEntity message)
+    public void sendMessage(String room_name, MessageEntity message, SendMessageCallback callback)
     {
         // Se non c'è media, salva direttamente
         if (message.media_url.isEmpty())
         {
             saveToFirestore(room_name, message);
+            if (callback != null)
+                callback.onSuccess();
             return;
         }
 
-
         var local_uri = Uri.parse(message.media_url);
         var extension = getFileExtension(local_uri);
-        var file_name = "chat_images/" + UUID.randomUUID().toString() + extension;
+        var file_name = UUID.randomUUID().toString() + extension;
         var storage_ref = m_storage.getReference().child(file_name);
-        storage_ref.putFile(local_uri)
-            .continueWithTask(task ->
-            {
-                if (!task.isSuccessful())
-                    throw task.getException();
+        var upload_task = storage_ref.putFile(local_uri);
+        upload_task.addOnProgressListener(snapshot ->
+        {
+            var progress = (int) ((100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount());
+            if (callback != null)
+                callback.onProgress(progress);
+        });
+        upload_task.continueWithTask(task ->
+        {
+            if (!task.isSuccessful())
+                throw task.getException();
 
-                return storage_ref.getDownloadUrl();
-            })
-            .addOnCompleteListener(task ->
+            return storage_ref.getDownloadUrl();
+        })
+        .addOnCompleteListener(task ->
+        {
+            if (task.isSuccessful())
             {
-                if (task.isSuccessful())
-                {
-                    var public_url = task.getResult().toString();
-                    var message_to_save = new MessageEntity(message.text, public_url, message.from);
-                    saveToFirestore(room_name, message_to_save);
-                }
-                else
-                {
-                    Log.e("STORAGE_ERROR", "Errore upload", task.getException());
-                }
-            });
+                var public_url = task.getResult().toString();
+                var message_to_save = new MessageEntity(message.text, public_url, message.from);
+                saveToFirestore(room_name, message_to_save);
+
+                if (callback != null)
+                    callback.onSuccess();
+            }
+            else
+            {
+                Log.e("STORAGE_ERROR", "Errore upload", task.getException());
+                if (callback != null)
+                    callback.onError(task.getException());
+            }
+        });
     }
 
 
