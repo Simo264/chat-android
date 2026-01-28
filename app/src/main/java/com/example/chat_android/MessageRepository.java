@@ -1,16 +1,14 @@
 package com.example.chat_android;
 
-import android.content.ContentResolver;
+
 import android.net.Uri;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.FirebaseStorage;
-
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -44,6 +42,15 @@ public class MessageRepository
         return m_instance;
     }
 
+    /**
+     * @brief Rimuove una chat completa e tutti i relativi messaggi dal database.
+     *
+     * Il metodo esegue l'eliminazione del documento principale della stanza e,
+     * ricorsivamente, di tutti i documenti contenuti nella sottocollezione "room_messages".
+     * L'operazione è gestita tramite un batch per garantire l'efficienza.
+     *
+     * @param room_name Il nome del documento della stanza da eliminare.
+     */
     public CompletableFuture<Void> removeChatDocument(String room_name)
     {
         var future = new CompletableFuture<Void>();
@@ -66,6 +73,32 @@ public class MessageRepository
                     .addOnFailureListener(future::completeExceptionally);
 
             })
+            .addOnFailureListener(future::completeExceptionally);
+        return future;
+    }
+
+    /**
+     * @brief Rimuove un singolo messaggio specifico da una stanza.
+     * Il metodo elimina il documento del messaggio dalla sottocollezione "room_messages".
+     *
+     * @param room_name Il nome della stanza contenente il messaggio.
+     * @param message Il MessageEntity da eliminare (deve avere l'ID impostato).
+     */
+    public CompletableFuture<Void> removeChatMessageFromRoom(String room_name, @NotNull MessageEntity message)
+    {
+        var future = new CompletableFuture<Void>();
+        if (message.message_id.isEmpty())
+        {
+            future.completeExceptionally(new IllegalArgumentException("Impossibile eliminare un messaggio senza un ID valido."));
+            return future;
+        }
+        var document = m_firestore_db.collection(COLLECTION_NAME)
+            .document(room_name)
+            .collection("room_messages")
+            .document(message.message_id);
+
+        document.delete()
+            .addOnSuccessListener(aVoid -> future.complete(null))
             .addOnFailureListener(future::completeExceptionally);
         return future;
     }
@@ -145,6 +178,7 @@ public class MessageRepository
                         var message_entity = document.toObject(MessageEntity.class);
                         if (message_entity != null)
                         {
+                            message_entity.message_id = document.getId();
                             messages.add(message_entity);
                         }
                     }

@@ -26,16 +26,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>
 {
     private final ArrayList<MessageEntity> m_message_list;
     private final String m_current_username;
+    private final OnMessageLongClickListener m_long_click_listener;
 
-    public MessageAdapter(String current_username)
+    public MessageAdapter(String current_username, OnMessageLongClickListener listener)
     {
         this.m_message_list = new ArrayList<MessageEntity>();
         this.m_current_username = current_username;
+        this.m_long_click_listener = listener;
     }
 
     public void updateMessages(ArrayList<MessageEntity> new_messages)
@@ -57,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageAdapter.MessageViewHolder holder, int position)
     {
         var message_entity = m_message_list.get(position);
-        holder.bind(message_entity, m_current_username);
+        holder.bind(message_entity, m_current_username, m_long_click_listener);
     }
 
     @Override
@@ -88,9 +91,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             m_play_button = itemView.findViewById(R.id.iv_play_button);
         }
 
-        public void bind(@NonNull MessageEntity message, String current_username)
+        public void bind(@NonNull MessageEntity message, String current_username, OnMessageLongClickListener click_listener)
         {
             var is_own_message = message.from.equals(current_username);
+            if (is_own_message)
+            {
+                m_message_container.setOnLongClickListener(v ->
+                {
+                    if (click_listener != null)
+                    {
+                        click_listener.onMessageLongClick(message);
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            else
+            {
+                m_message_container.setOnLongClickListener(null);
+            }
+
             var attr_background = is_own_message
                 ? com.google.android.material.R.attr.colorPrimaryContainer
                 : com.google.android.material.R.attr.colorSecondaryContainer;
@@ -195,7 +215,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
             catch (Exception e)
             {
-                Log.e(RoomRepository.FIRESTORE_TAG, e.getMessage());
+                Log.e(RoomRepository.FIRESTORE_TAG, Objects.requireNonNull(e.getMessage()));
             }
             return "";
         }

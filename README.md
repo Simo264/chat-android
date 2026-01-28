@@ -31,12 +31,10 @@ in una specifica stanza
 - Invio di messaggi testuali
 - Visualizzazione in tempo reale dei messaggi
 - I messaggi vengono ricevuti da tutti gli utenti presenti nella stanza
-- (Opzionale) Notifiche push per ogni messaggio ricevuto
-
-### 4. Contenuti multimediali (opzionale)
-
 - Invio di foto/video dalla galleria o fotocamera
+- Possibilità di eliminare uno specifico messaggio selezionandolo
 - Storage dei contenuti multimediali su Firebase Storage
+- (Opzionale) Notifiche push per ogni messaggio ricevuto
 
 ## Struttura del database (firestore)
 
@@ -63,6 +61,8 @@ dedicata.
 
 - **from**: username del mittente
 - **text**: il contenuto testuale del messaggio
+- **media_url**: l'url pubblico della risorsa caricata su Firebase Storage
+- **media_type**: il tipo del contenuto (immagine o video)
 - **timestamp**: data di invio 
 
 Nota: quando una stanza viene eliminata, il campo `is_delete` in `rooms` 

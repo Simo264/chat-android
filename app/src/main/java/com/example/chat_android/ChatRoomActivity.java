@@ -24,7 +24,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -58,7 +60,28 @@ public class ChatRoomActivity extends AppCompatActivity
         }
 
         m_current_username = AuthRepository.getInstance().getUsername();
-        m_adapter = new MessageAdapter(m_current_username);
+        m_adapter = new MessageAdapter(m_current_username, message ->
+        {
+            new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.delete_message_title)
+                .setMessage(R.string.delete_message_confirm)
+                .setPositiveButton(R.string.delete, (dialog, which) ->
+                {
+                    var repo = MessageRepository.getInstance();
+                    repo.removeChatMessageFromRoom(m_room.name, message)
+                        .thenRun(() ->
+                        {
+                            Snackbar.make(m_recycler_view, "Messaggio eliminato", Snackbar.LENGTH_SHORT).show();
+                        })
+                        .exceptionally(e ->
+                        {
+                            Log.e("CHAT_ERROR", "Errore eliminazione", e);
+                            return null;
+                        });
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+        });
         m_recycler_view = findViewById(R.id.rv_messages);
         m_recycler_view.setAdapter(m_adapter);
         m_input_text = findViewById(R.id.input_text);
@@ -74,7 +97,6 @@ public class ChatRoomActivity extends AppCompatActivity
             if (uri != null)
             {
                 m_selected_image_uri = uri.toString();
-
                 var mime_type = getContentResolver().getType(uri);
                 if (mime_type != null && mime_type.startsWith("video/"))
                 {
@@ -131,7 +153,7 @@ public class ChatRoomActivity extends AppCompatActivity
             {
                 runOnUiThread(() ->
                 {
-                    Toast.makeText(ChatRoomActivity.this, "Errore caricamento messaggi", Toast.LENGTH_SHORT).show();
+                    Log.e("MESSAGE_REPO", "Errore caricamento messaggi: " + e.toString());
                 });
             }
         });

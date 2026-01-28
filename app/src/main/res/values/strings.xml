@@ -71,6 +71,8 @@
 
     <string name="chat_room_title">Stanza di chat: %1$s</string>
     <string name="write_message">Scrivi &#8230;</string>
+    <string name="delete_message_title">Elimina messaggio</string>
+    <string name="delete_message_confirm">Sei sicuro di voler eliminare questo messaggio?</string>
 </resources>
 
 
