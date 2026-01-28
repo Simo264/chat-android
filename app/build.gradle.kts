@@ -47,7 +47,9 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth:24.0.1")
+    implementation("com.google.firebase:firebase-firestore:26.1.0")
+    implementation("com.google.firebase:firebase-storage:22.0.1")
     implementation("com.google.android.material:material:1.13.0")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
 }

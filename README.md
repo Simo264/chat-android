@@ -18,9 +18,13 @@ e ricevere notifiche in tempo reale.
 
 - Creazione di nuove stanze
 - Eliminazione stanze (solo per il proprietario)
-- Lista delle stanze disponibili con filtri: visualizza tutte le stanze, visualizza stanze create dall'utente, visualizza stanze attive in cui l'utente partecipa
+- Lista delle stanze disponibili con filtri: visualizza tutte le stanze, 
+visualizza stanze create dall'utente, visualizza stanze attive in cui l'utente 
+partecipa
 - Possibilità di entrare/uscire da qualsiasi stanza in qualsiasi momento
-- Aggiornamenti in tempo reale del numero di partecipanti per ogni stanza, delle stanze presenti e nuove stanze create, della lista degli utenti presenti in una specifica stanza
+- Aggiornamenti in tempo reale del numero di partecipanti per ogni stanza, 
+delle stanze presenti e nuove stanze create, della lista degli utenti presenti 
+in una specifica stanza
 
 ### 3. Messaggistica real-time
 

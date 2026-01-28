@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/message_container"
@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp">
+
 
         <TextView
             android:id="@+id/tv_sender_name"
@@ -19,6 +20,15 @@
             android:textStyle="bold"
             android:textSize="14sp"
             android:textColor="@android:color/black" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_message_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="4dp"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent" />
 
         <TextView
             android:id="@+id/tv_message_text"

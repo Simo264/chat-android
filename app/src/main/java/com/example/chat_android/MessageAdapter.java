@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,8 +22,8 @@ import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>
 {
-    private ArrayList<MessageEntity> m_message_list;
-    private String m_current_username;
+    private final ArrayList<MessageEntity> m_message_list;
+    private final String m_current_username;
 
     public MessageAdapter(String current_username)
     {
@@ -58,10 +61,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     static class MessageViewHolder extends RecyclerView.ViewHolder
     {
-        private TextView m_tv_sender_name;
-        private TextView m_tv_message_text;
-        private TextView m_tv_timestamp;
-        private LinearLayout m_message_container;
+        private final TextView m_tv_sender_name;
+        private final TextView m_tv_message_text;
+        private final TextView m_tv_timestamp;
+        private final LinearLayout m_message_container;
+        private final ImageView m_message_image;
 
         public MessageViewHolder(@NonNull View itemView)
         {
@@ -70,41 +74,61 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             m_tv_message_text = itemView.findViewById(R.id.tv_message_text);
             m_tv_timestamp = itemView.findViewById(R.id.tv_timestamp);
             m_message_container = itemView.findViewById(R.id.message_container);
+            m_message_image = itemView.findViewById(R.id.iv_message_image);
         }
 
         public void bind(@NonNull MessageEntity message, String current_username)
         {
             var is_own_message = message.from.equals(current_username);
+
+            // Stampa lo username
             if (is_own_message)
                 m_tv_sender_name.setText(m_tv_sender_name.getContext().getString(R.string.you));
             else
                 m_tv_sender_name.setText(message.from);
 
+            // messaggio a destra se il messaggio l'ho inviato io, a sinistra altrimenti
             var params = (FrameLayout.LayoutParams) m_message_container.getLayoutParams();
-            if (is_own_message)
-            {
-                params.gravity = Gravity.END;
-                m_tv_sender_name.setGravity(Gravity.END);
-                m_tv_message_text.setGravity(Gravity.END);
-                m_tv_timestamp.setGravity(Gravity.END);
-            }
-            else
-            {
-                params.gravity = Gravity.START;
-                m_tv_sender_name.setGravity(Gravity.START);
-                m_tv_message_text.setGravity(Gravity.START);
-                m_tv_timestamp.setGravity(Gravity.START);
-            }
+            var gravity = Gravity.START;
+            if(is_own_message)
+                gravity = Gravity.END;
+
+            params.gravity = gravity;
+            m_tv_sender_name.setGravity(gravity);
+            m_tv_message_text.setGravity(gravity);
+            m_tv_timestamp.setGravity(gravity);
             m_message_container.setLayoutParams(params);
 
-
-            m_tv_message_text.setText(message.text);
-            if (message.timestamp != null)
-                m_tv_timestamp.setText(formatTimestamp(message.timestamp));
+            // mostra l'immagine (se presente)
+            if (!message.media_url.isEmpty())
+            {
+                m_message_image.setVisibility(View.VISIBLE);
+                Glide.with(m_message_image.getContext())
+                    .load(message.media_url)
+                    .centerCrop()
+                    .into(m_message_image);
+            }
             else
-                m_tv_timestamp.setText("");
+            {
+                m_message_image.setVisibility(View.GONE);
+            }
+
+            // mostra il testo del messaggio (se presente)
+            if (!message.text.isEmpty())
+            {
+                m_tv_message_text.setVisibility(View.VISIBLE);
+                m_tv_message_text.setText(message.text);
+            }
+            else
+            {
+                m_tv_message_text.setVisibility(View.GONE);
+            }
+
+            // mostra il timestamp
+            m_tv_timestamp.setText(formatTimestamp(message.timestamp));
         }
 
+        @NonNull
         private String formatTimestamp(Object timestamp)
         {
             try

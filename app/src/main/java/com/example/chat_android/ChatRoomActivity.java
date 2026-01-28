@@ -2,14 +2,22 @@ package com.example.chat_android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
@@ -20,6 +28,11 @@ public class ChatRoomActivity extends AppCompatActivity
     private MessageAdapter m_adapter;
     private RecyclerView m_recycler_view;
     private EditText m_input_text;
+    private View m_container_preview_wrapper;
+    private ImageView m_img_preview;
+    private String m_selected_image_uri;
+
+    private ActivityResultLauncher<PickVisualMediaRequest> m_photo_picker_launcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +49,24 @@ public class ChatRoomActivity extends AppCompatActivity
         }
 
         m_current_username = AuthRepository.getInstance().getUsername();
+        m_adapter = new MessageAdapter(m_current_username);
+        m_recycler_view = findViewById(R.id.rv_messages);
+        m_recycler_view.setAdapter(m_adapter);
+        m_input_text = findViewById(R.id.input_text);
+        m_container_preview_wrapper = findViewById(R.id.container_preview_wrapper);
+        m_container_preview_wrapper.setVisibility(View.GONE);
+        m_img_preview = findViewById(R.id.img_preview);
+        m_selected_image_uri = "";
+        m_photo_picker_launcher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri ->
+        {
+            if (uri != null)
+            {
+                m_selected_image_uri = uri.toString();
+                m_img_preview.setImageURI(uri);
+                m_container_preview_wrapper.setVisibility(View.VISIBLE);
+                Log.d("GALLERY_DEBUG", "URI selezionato: " + m_selected_image_uri);
+            }
+        });
 
         MaterialToolbar top_app_bar = findViewById(R.id.top_app_bar);
         top_app_bar.setTitle(getString(R.string.chat_room_title, m_room.name));
@@ -54,14 +85,21 @@ public class ChatRoomActivity extends AppCompatActivity
             return false;
         });
 
-        m_adapter = new MessageAdapter(m_current_username);
-        m_recycler_view = findViewById(R.id.rv_messages);
-        m_recycler_view.setAdapter(m_adapter);
+        MaterialButton btn_remove_image = findViewById(R.id.btn_remove_image);
+        btn_remove_image.setOnClickListener(v ->
+        {
+            m_selected_image_uri = "";
+            m_container_preview_wrapper.setVisibility(View.GONE);
+        });
 
-        m_input_text = findViewById(R.id.input_text);
-
+        ImageButton btn_camera = findViewById(R.id.btn_camera);
+        btn_camera.setOnClickListener(v -> {
+            // todo
+        });
+        ImageButton btn_gallery = findViewById(R.id.btn_gallery);
+        btn_gallery.setOnClickListener(v -> openPhotoPicker());
         Button btn_send = findViewById(R.id.btn_send);
-        btn_send.setOnClickListener(v -> sendMessage());
+        btn_send.setOnClickListener(v -> send());
     }
 
     @Override
@@ -69,7 +107,6 @@ public class ChatRoomActivity extends AppCompatActivity
     {
         super.onStart();
 
-        // Inizia ad ascoltare i messaggi quando l'activity diventa visibile
         var message_repo = MessageRepository.getInstance();
         message_repo.observeRoomMessages(m_room.name, new MessagesListener()
         {
@@ -79,10 +116,8 @@ public class ChatRoomActivity extends AppCompatActivity
                 runOnUiThread(() ->
                 {
                     m_adapter.updateMessages(messages);
-                    if (messages.size() > 0)
-                    {
+                    if (!messages.isEmpty())
                         m_recycler_view.smoothScrollToPosition(messages.size() - 1);
-                    }
                 });
             }
 
@@ -105,14 +140,34 @@ public class ChatRoomActivity extends AppCompatActivity
         MessageRepository.getInstance().removeMessagesListener();
     }
 
-    private void sendMessage()
+    private void send()
     {
         var message_text = m_input_text.getText().toString().trim();
-        if (message_text.isEmpty())
+        if (message_text.isEmpty() && m_selected_image_uri.isEmpty())
             return;
 
-        var message_entity = new MessageEntity(message_text, m_current_username);
-        MessageRepository.getInstance().sendMessage(m_room.name, m_current_username, message_entity);
+        var message_entity = new MessageEntity(
+            message_text,
+            m_selected_image_uri,  // URI locale o stringa vuota
+            m_current_username
+        );
+        MessageRepository.getInstance().sendMessage(m_room.name, message_entity);
+
         m_input_text.setText("");
+        m_selected_image_uri = "";
+        m_container_preview_wrapper.setVisibility(View.GONE);
+    }
+
+    private void openCamera()
+    {
+        // todo
+    }
+
+    private void openPhotoPicker()
+    {
+        m_photo_picker_launcher.launch(new PickVisualMediaRequest.Builder()
+            .setMediaType(ActivityResultContracts.PickVisualMedia.ImageAndVideo.INSTANCE) // immagini + video
+            .build()
+        );
     }
 }

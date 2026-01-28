@@ -24,9 +24,61 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:stackFromEnd="true"
         app:layout_constraintTop_toBottomOf="@+id/included_app_bar"
-        app:layout_constraintBottom_toTopOf="@+id/layout_input"
+        app:layout_constraintBottom_toTopOf="@+id/container_preview_wrapper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/container_preview_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:padding="8dp"
+        android:background="?attr/colorSurface"
+        app:layout_constraintBottom_toTopOf="@+id/layout_input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img_preview"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_remove_image"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="4dp"
+                    android:padding="0dp"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    app:icon="@drawable/close_24"
+                    app:iconSize="20dp"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="@android:color/black"
+                    app:backgroundTint="@android:color/white"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+                    app:cornerRadius="16dp" />
+
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/layout_input"
@@ -40,6 +92,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btn_camera"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="camera"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/add_a_photo_24" />
+
+        <ImageButton
+            android:id="@+id/btn_gallery"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="galleria"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/add_photo_alternate_24" />
 
         <EditText
             android:id="@+id/input_text"
@@ -55,7 +123,9 @@
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/submit" />
+            android:text="@string/submit"
+            app:icon="@drawable/send_24"
+            style="@style/Widget.MaterialComponents.Button.Icon" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
