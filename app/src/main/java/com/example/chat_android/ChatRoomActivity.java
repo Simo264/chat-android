@@ -59,7 +59,6 @@ public class ChatRoomActivity extends AppCompatActivity
     private Uri m_camera_uri = null;
     private boolean m_is_camera_video_media = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -152,7 +151,6 @@ public class ChatRoomActivity extends AppCompatActivity
 
                 m_selected_media_type = MessageEntity.MEDIA_VIDEO;
                 m_selected_media_uri = m_camera_uri.toString();
-                Log.d("m_camera_launcher", "URI: " + m_selected_media_uri);
                 showVideoThumbnail(m_camera_uri);
             }
             else
@@ -162,7 +160,6 @@ public class ChatRoomActivity extends AppCompatActivity
 
                 m_selected_media_type = MessageEntity.MEDIA_IMAGE;
                 m_selected_media_uri = m_camera_uri.toString();
-                Log.d("m_camera_launcher", "URI: " + m_selected_media_uri);
                 m_img_preview.setImageURI(m_camera_uri);
             }
             m_container_preview_wrapper.setVisibility(View.VISIBLE);
@@ -230,7 +227,6 @@ public class ChatRoomActivity extends AppCompatActivity
         // Rimuovi il listener quando l'activity non è più visibile
         MessageRepository.getInstance().removeMessagesListener();
     }
-
 
     private void showVideoThumbnail(Uri video_uri)
     {

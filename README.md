@@ -29,12 +29,12 @@ in una specifica stanza
 ### 3. Messaggistica real-time
 
 - Invio di messaggi testuali
+- Invio di foto e video dalla galleria
+- Invio di foto e video dalla fotocamera
 - Visualizzazione in tempo reale dei messaggi
 - I messaggi vengono ricevuti da tutti gli utenti presenti nella stanza
-- Invio di foto/video dalla galleria o fotocamera
 - Possibilità di eliminare uno specifico messaggio selezionandolo
 - Storage dei contenuti multimediali su Firebase Storage
-- (Opzionale) Notifiche push per ogni messaggio ricevuto
 
 ## Struttura del database (firestore)
 
