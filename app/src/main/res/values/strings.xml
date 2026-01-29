@@ -15,6 +15,8 @@
     <string name="ok">Ok</string>
     <string name="rooms">Stanze</string>
     <string name="you">Tu</string>
+    <string name="photo">Foto</string>
+    <string name="video">Video</string>
 
     <string name="error_empty_fields">Compila tutti i campi</string>
     <string name="error_password_too_short">La password deve avere almeno 6 caratteri</string>
@@ -73,6 +75,9 @@
     <string name="write_message">Scrivi &#8230;</string>
     <string name="delete_message_title">Elimina messaggio</string>
     <string name="delete_message_confirm">Sei sicuro di voler eliminare questo messaggio?</string>
+
+    <string name="dialog_camera_title">Scegli contenuto</string>
+    <string name="error_camera_permission">Permesso fotocamera necessario per continuare</string>
 </resources>
 
 
